@@ -3,7 +3,7 @@ package stdapp
 import (
 	"github.com/ddollar/stdapi"
 	"github.com/ddollar/stdgraph"
-	"golang.org/x/xerrors"
+	"github.com/pkg/errors"
 )
 
 type Api struct {
@@ -17,7 +17,7 @@ func NewApi(schema string, resolver any) (*Api, error) {
 
 	g, err := stdgraph.NewHandler(schema, resolver)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "stgraph handler failed")
 	}
 
 	a.server.Router.PathPrefix("/api/graph").Handler(g)
@@ -27,7 +27,7 @@ func NewApi(schema string, resolver any) (*Api, error) {
 
 func (a *Api) ListenAndServe(addr string) error {
 	if err := a.server.Listen("https", addr); err != nil {
-		return xerrors.Errorf("listen: %w", err)
+		return errors.Wrap(err, "starting listener")
 	}
 
 	return nil
