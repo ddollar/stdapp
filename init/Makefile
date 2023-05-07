@@ -1,4 +1,4 @@
-.PHONY: all build compress lint test vendor
+.PHONY: all build compress install lint test vendor
 
 all: build
 
@@ -7,6 +7,9 @@ build:
 
 compress:
 	upx-ucl -1 dist/app
+
+install:
+	go install .
 
 lint:
 	go run ./vendor/github.com/golangci/golangci-lint/cmd/golangci-lint/main.go run
