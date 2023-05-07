@@ -1,0 +1,22 @@
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+linters:
+  enable:
+    - depguard
+    - forbidigo
+    - wrapcheck
+
+linters-settings:
+  depguard:
+    list-type: denylist
+    packages:
+      - errors
+      - golang.org/x/xerrors
+  forbidigo:
+    forbid:
+      - '^fmt\.Print.*$'
+      - '^fmt\.Errorf.*$'
+  wrapcheck:
+    ignorePackageGlobs:
