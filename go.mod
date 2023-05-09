@@ -4,14 +4,15 @@ go 1.20
 
 require (
 	github.com/cespare/reflex v0.3.1
+	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.0.3
 	github.com/ddollar/stdgraph v1.2.0
+	github.com/fsnotify/fsnotify v1.5.4
 	github.com/go-pg/pg/v10 v10.11.0
 	github.com/golangci/golangci-lint v1.52.2
 	github.com/goware/modvendor v0.5.0
 	github.com/pkg/errors v0.9.1
-	github.com/rjeczalik/notify v0.9.3
 )
 
 require (
@@ -46,14 +47,12 @@ require (
 	github.com/daixiang0/gci v0.10.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/ddollar/graphql-go v1.5.0-ddollar2 // indirect
-	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52 // indirect
 	github.com/denis-tingaikin/go-header v0.4.3 // indirect
 	github.com/esimonov/ifshort v1.0.4 // indirect
 	github.com/ettle/strcase v0.1.1 // indirect
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/firefart/nonamedreturns v1.0.4 // indirect
-	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/fzipp/gocyclo v0.6.0 // indirect
 	github.com/go-critic/go-critic v0.7.0 // indirect
 	github.com/go-pg/zerochecker v0.2.0 // indirect

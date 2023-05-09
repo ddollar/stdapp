@@ -1,10 +1,13 @@
 package stdapp
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/ddollar/stdcli"
 	"github.com/pkg/errors"
@@ -19,6 +22,22 @@ func (a *App) cliApi(ctx *stdcli.Context) error {
 	if err := g.server.Listen("https", ":8000"); err != nil {
 		return errors.WithStack(err)
 	}
+
+	return nil
+}
+
+func (a *App) cliMigration(ctx *stdcli.Context) error {
+	name := ctx.Arg(0)
+
+	file := filepath.Join("db", "migrate", fmt.Sprintf("%s_%s.sql", time.Now().Format("20060102150405"), name))
+
+	fd, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+	defer fd.Close()
+
+	ctx.Writef("%s\n", file)
 
 	return nil
 }

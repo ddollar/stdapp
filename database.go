@@ -19,6 +19,8 @@ func database(url_ string) (Database, error) {
 	}
 
 	switch u.Scheme {
+	case "":
+		return nil, nil
 	case "postgres":
 		return pgInitialize(url_)
 	default:
