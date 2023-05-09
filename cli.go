@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/ddollar/migrate"
 	"github.com/ddollar/stdcli"
 	"github.com/pkg/errors"
 )
@@ -16,10 +17,18 @@ import (
 func (a *App) cliApi(ctx *stdcli.Context) error {
 	g, err := a.graphQL()
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
 	if err := g.server.Listen("https", ":8000"); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (a *App) cliMigrate(ctx *stdcli.Context) error {
+	if err := migrate.Run(a.database, a.migrations); err != nil {
 		return errors.WithStack(err)
 	}
 
@@ -33,11 +42,27 @@ func (a *App) cliMigration(ctx *stdcli.Context) error {
 
 	fd, err := os.Create(file)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 	defer fd.Close()
 
-	ctx.Writef("%s\n", file)
+	if err := ctx.Writef("%s\n", file); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (a *App) cliPsql(ctx *stdcli.Context) error {
+	cmd := exec.Command("psql", a.database)
+
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		return errors.WithStack(err)
+	}
 
 	return nil
 }
@@ -62,7 +87,7 @@ func (a *App) cliReload(ctx *stdcli.Context) error {
 		}
 
 		if err := a.watchChanges(extensions); err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 
 		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGTERM); err != nil {

@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/cespare/reflex v0.3.1
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
+	github.com/ddollar/migrate v1.3.0
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.0.3
 	github.com/ddollar/stdgraph v1.2.0
@@ -179,7 +180,7 @@ require (
 	github.com/ultraware/whitespace v0.0.5 // indirect
 	github.com/uudashr/gocognit v1.0.6 // indirect
 	github.com/vmihailenco/bufpool v0.1.11 // indirect
-	github.com/vmihailenco/msgpack/v5 v5.3.4 // indirect
+	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/yagipy/maintidx v1.0.0 // indirect
@@ -188,7 +189,7 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
-	golang.org/x/crypto v0.5.0 // indirect
+	golang.org/x/crypto v0.6.0 // indirect
 	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e // indirect
 	golang.org/x/exp/typeparams v0.0.0-20230224173230-c95f2b4c22f2 // indirect
 	golang.org/x/mod v0.9.0 // indirect

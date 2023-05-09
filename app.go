@@ -10,7 +10,7 @@ import (
 var version = "dev"
 
 type App struct {
-	database   Database
+	database   string
 	logger     *logger.Logger
 	migrations fs.FS
 	name       string
@@ -25,10 +25,14 @@ func (a *App) Run(args []string) int {
 
 	c.Command("api", "run the api server", a.cliApi, stdcli.CommandOptions{})
 
+	c.Command("migrate", "run migrations", a.cliMigrate, stdcli.CommandOptions{})
+
 	c.Command("migration", "create a migration", a.cliMigration, stdcli.CommandOptions{
 		Usage:    "<name>",
 		Validate: stdcli.Args(1),
 	})
+
+	c.Command("psql", "run database console", a.cliPsql, stdcli.CommandOptions{})
 
 	c.Command("reload", "reload a command on changes", a.cliReload, stdcli.CommandOptions{
 		Flags: []stdcli.Flag{

@@ -126,6 +126,9 @@ github.com/ddollar/graphql-go/types
 # github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
 ## explicit
 github.com/ddollar/logger
+# github.com/ddollar/migrate v1.3.0
+## explicit; go 1.18
+github.com/ddollar/migrate
 # github.com/ddollar/stdapi v1.0.3
 ## explicit
 github.com/ddollar/stdapi
@@ -689,7 +692,7 @@ github.com/uudashr/gocognit
 # github.com/vmihailenco/bufpool v0.1.11
 ## explicit; go 1.13
 github.com/vmihailenco/bufpool
-# github.com/vmihailenco/msgpack/v5 v5.3.4
+# github.com/vmihailenco/msgpack/v5 v5.3.5
 ## explicit; go 1.11
 github.com/vmihailenco/msgpack/v5
 github.com/vmihailenco/msgpack/v5/msgpcode
@@ -729,7 +732,7 @@ go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
-# golang.org/x/crypto v0.5.0
+# golang.org/x/crypto v0.6.0
 ## explicit; go 1.17
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/ssh/terminal

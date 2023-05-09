@@ -9,15 +9,15 @@ import (
 
 func New(opts Options) (*App, error) {
 	if opts.Name == "" {
-		return nil, errors.New("Name required")
+		return nil, errors.WithStack(errors.New("Name required"))
 	}
 
 	if opts.Resolver == nil {
-		return nil, errors.New("Resolver required")
+		return nil, errors.WithStack(errors.New("Resolver required"))
 	}
 
 	if opts.Schema == "" {
-		return nil, errors.New("Schema required")
+		return nil, errors.WithStack(errors.New("Schema required"))
 	}
 
 	db, err := database(opts.Database)
@@ -31,7 +31,7 @@ func New(opts Options) (*App, error) {
 	}
 
 	a := &App{
-		database:   db,
+		database:   opts.Database,
 		logger:     logger.New(fmt.Sprintf("ns=%s", opts.Name)),
 		migrations: opts.Migrations,
 		name:       opts.Name,
