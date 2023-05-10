@@ -121,6 +121,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/ddollar/graphql-go v1.5.0-ddollar2 h1:LQTaqSLGlErVjFNRWxVozOm3f/l0/K6Gj+gZt5lYyJo=
 github.com/ddollar/graphql-go v1.5.0-ddollar2/go.mod h1:QchJG++OsnVdcmOngVIWUVIEufmuJEw2UpPMGk37K04=
+github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2 h1:Lsq95mhfoFeoaRGNnMWuxtFXip3qYeH+X/w9IUHXq98=
+github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2/go.mod h1:a47eRjVBKkU3gu/eLnV06s58CFcfSbMRV27t1g0z9z0=
 github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52 h1:OYnMA9hPUciXiWXoYuKXexWh+yfbUYtV+BwKTsm7U5A=
 github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52/go.mod h1:n6+tdoM+N4XRXpS4eENqL2iD6c9rC1XrJ+PjoFiafTU=
 github.com/ddollar/migrate v1.3.0 h1:MqJislItgJtW/+qFq4wgA8qqWR+MTVjct+JGBzaZKFE=
@@ -129,8 +131,8 @@ github.com/ddollar/stdapi v1.0.3 h1:/Nsm2UmLh0GB0IUFBL8KXrSOUreW/yAwfyUvJ/CE+nU=
 github.com/ddollar/stdapi v1.0.3/go.mod h1:ck4AfP20jGAgzx0laO7NSvDBh6uKmqYJAWTvcvs4Clc=
 github.com/ddollar/stdcli v1.0.3 h1:YwT8pddVORCQ7vCACjeWHGFIM6ef7zzKiDvfZ0yqb/s=
 github.com/ddollar/stdcli v1.0.3/go.mod h1:ueOIoD2L64xpBoAPThSfgFGiNFyXPteRouxjjl3AP/4=
-github.com/ddollar/stdgraph v1.2.0 h1:DHLJxx53dAV+19dnexrnHjG9uQgqCxJQiQZZr8olDtQ=
-github.com/ddollar/stdgraph v1.2.0/go.mod h1:ULjgjbcejb5xgeMZW73a1nmgofgRCIalGce+r/yxTfo=
+github.com/ddollar/stdgraph v1.3.0 h1:Ni4z8RTsF3DPhrX8CfMpbe+AFS1akQxOoomN8va8yfg=
+github.com/ddollar/stdgraph v1.3.0/go.mod h1:aWYVfTmBOsRpHQQ2iMntVgd/Ghe4DCusJRgiSu9HcYY=
 github.com/denis-tingaikin/go-header v0.4.3 h1:tEaZKAlqql6SKCY++utLmkPLd6K8IBM20Ha7UVm+mtU=
 github.com/denis-tingaikin/go-header v0.4.3/go.mod h1:0wOCWuN71D5qIgE2nz9KrKmuYBAC2Mra5RassOIQ2/c=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
@@ -292,6 +294,7 @@ github.com/gorilla/securecookie v1.1.1 h1:miw7JPhV+b/lAHSXz4qd/nN9jRiAFV5FwjeKyC
 github.com/gorilla/securecookie v1.1.1/go.mod h1:ra0sb63/xPlUeL+yeDciTfxMRAA+MP+HVt/4epWDjd4=
 github.com/gorilla/sessions v1.2.1 h1:DHd3rPN5lE3Ts3D8rKkQ8x/0kqfeNmBAaiSi+o7FsgI=
 github.com/gorilla/sessions v1.2.1/go.mod h1:dk2InVEVJ0sfLlnXv9EAgkf6ecYs/i80K/zI+bUmuGM=
+github.com/gorilla/websocket v1.4.1/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/gorilla/websocket v1.5.0 h1:PPwGk2jz7EePpoHN/+ClbZu8SPxiqlu12wZP/3sWmnc=
 github.com/gorilla/websocket v1.5.0/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/gostaticanalysis/analysisutil v0.7.1 h1:ZMCjoue3DtDWQ5WyU16YbjbQEQ3VuzwxALrpYd+HeKk=

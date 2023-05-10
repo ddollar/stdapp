@@ -8,7 +8,7 @@ require (
 	github.com/ddollar/migrate v1.3.0
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.0.3
-	github.com/ddollar/stdgraph v1.2.0
+	github.com/ddollar/stdgraph v1.3.0
 	github.com/fsnotify/fsnotify v1.5.4
 	github.com/go-pg/pg/v10 v10.11.0
 	github.com/golangci/golangci-lint v1.52.2
@@ -48,6 +48,7 @@ require (
 	github.com/daixiang0/gci v0.10.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/ddollar/graphql-go v1.5.0-ddollar2 // indirect
+	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2 // indirect
 	github.com/denis-tingaikin/go-header v0.4.3 // indirect
 	github.com/esimonov/ifshort v1.0.4 // indirect
 	github.com/ettle/strcase v0.1.1 // indirect

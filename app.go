@@ -40,5 +40,11 @@ func (a *App) Run(args []string) int {
 		},
 	})
 
+	c.Command("web", "start web server", a.cliWeb, stdcli.CommandOptions{
+		Flags: []stdcli.Flag{
+			stdcli.BoolFlag("development", "d", "run in development mode"),
+		},
+	})
+
 	return c.Execute(args)
 }

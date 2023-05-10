@@ -99,3 +99,28 @@ func (a *App) cliReload(ctx *stdcli.Context) error {
 		}
 	}
 }
+
+func (a *App) cliWeb(ctx *stdcli.Context) error {
+	if ctx.Bool("development") {
+		return a.cliWebDevelopment()
+	}
+
+	return nil
+}
+
+func (a *App) cliWebDevelopment() error {
+	if err := os.Chdir("web"); err != nil {
+		return errors.WithStack(err)
+	}
+
+	cmd := exec.Command("npx", "vite", "--host")
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}

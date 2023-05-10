@@ -123,6 +123,10 @@ github.com/ddollar/graphql-go/relay
 github.com/ddollar/graphql-go/trace/noop
 github.com/ddollar/graphql-go/trace/tracer
 github.com/ddollar/graphql-go/types
+# github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
+## explicit; go 1.15
+github.com/ddollar/graphql-transport-ws/graphqlws
+github.com/ddollar/graphql-transport-ws/graphqlws/internal/connection
 # github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
 ## explicit
 github.com/ddollar/logger
@@ -135,7 +139,7 @@ github.com/ddollar/stdapi
 # github.com/ddollar/stdcli v1.0.3
 ## explicit; go 1.13
 github.com/ddollar/stdcli
-# github.com/ddollar/stdgraph v1.2.0
+# github.com/ddollar/stdgraph v1.3.0
 ## explicit; go 1.19
 github.com/ddollar/stdgraph
 # github.com/denis-tingaikin/go-header v0.4.3
