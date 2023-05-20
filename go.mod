@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/cespare/reflex v0.3.1
+	github.com/ddollar/coalesce v1.1.0
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
 	github.com/ddollar/migrate v1.3.0
 	github.com/ddollar/stdapi v1.0.3
@@ -167,7 +168,7 @@ require (
 	github.com/ssgreg/nlreturn/v2 v2.2.1 // indirect
 	github.com/stbenjam/no-sprintf-host-port v0.1.1 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
-	github.com/stretchr/testify v1.8.2 // indirect
+	github.com/stretchr/testify v1.8.3 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c // indirect
 	github.com/tdakkota/asciicheck v0.2.0 // indirect

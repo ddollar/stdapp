@@ -28,6 +28,10 @@ func (a *App) cliApi(ctx *stdcli.Context) error {
 }
 
 func (a *App) cliMigrate(ctx *stdcli.Context) error {
+	if a.compose {
+		return a.run("api", "go", "run", ".", "migrate")
+	}
+
 	if err := migrate.Run(a.database, a.migrations); err != nil {
 		return errors.WithStack(err)
 	}
@@ -53,18 +57,20 @@ func (a *App) cliMigration(ctx *stdcli.Context) error {
 	return nil
 }
 
-func (a *App) cliPsql(ctx *stdcli.Context) error {
-	cmd := exec.Command("psql", a.database)
+func (a *App) cliPgConsole(ctx *stdcli.Context) error {
+	return a.run("postgres", "psql", a.database)
+}
 
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+func (a *App) cliPgExport(ctx *stdcli.Context) error {
+	return a.run("postgres", "pg_dump", "--clean", "--no-acl", "--no-owner", a.database)
+}
 
-	if err := cmd.Run(); err != nil {
-		return errors.WithStack(err)
-	}
+func (a *App) cliPgImport(ctx *stdcli.Context) error {
+	return a.run("postgres", "psql", a.database)
+}
 
-	return nil
+func (a *App) cliPgReset(ctx *stdcli.Context) error {
+	return a.run("postgres", "psql", a.database, "-c", "drop schema public cascade; create schema public;")
 }
 
 func (a *App) cliReload(ctx *stdcli.Context) error {
