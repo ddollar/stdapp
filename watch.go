@@ -1,7 +1,6 @@
 package stdapp
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -44,8 +43,6 @@ func (a *App) watchChanges(extensions []string) error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
-
-	fmt.Printf("paths: %+v\n", paths)
 
 	for path := range paths {
 		if err := w.Add(path); err != nil {
