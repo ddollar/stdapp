@@ -1,6 +1,7 @@
 package stdapp
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -44,6 +45,8 @@ func (a *App) watchChanges(extensions []string) error {
 		return errors.WithStack(err)
 	}
 
+	fmt.Printf("paths: %+v\n", paths)
+
 	for path := range paths {
 		if err := w.Add(path); err != nil {
 			return errors.WithStack(err)
@@ -61,7 +64,7 @@ func (a *App) watchChanges(extensions []string) error {
 	for {
 		select {
 		case e = <-w.Events:
-			if e.Op == fsnotify.Write {
+			if e.Op.Has(fsnotify.Write) {
 				t.Reset(debounce)
 			}
 		case <-t.C:

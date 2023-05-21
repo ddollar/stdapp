@@ -10,7 +10,7 @@ require (
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.0.3
 	github.com/ddollar/stdgraph v1.3.0
-	github.com/fsnotify/fsnotify v1.5.4
+	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-pg/pg/v10 v10.11.0
 	github.com/golangci/golangci-lint v1.52.2
 	github.com/goware/modvendor v0.5.0
@@ -196,7 +196,7 @@ require (
 	golang.org/x/exp/typeparams v0.0.0-20230224173230-c95f2b4c22f2 // indirect
 	golang.org/x/mod v0.9.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
+	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/term v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/tools v0.7.0 // indirect
