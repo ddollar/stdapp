@@ -28,6 +28,10 @@ func (a *App) Run(args []string) int {
 
 	c.Command("api", "run the api server", a.cliApi, stdcli.CommandOptions{})
 
+	c.Command("cmd", "run a command", a.cliCmd, stdcli.CommandOptions{
+		Validate: stdcli.ArgsMin(1),
+	})
+
 	c.Command("migrate", "run migrations", a.cliMigrate, stdcli.CommandOptions{})
 
 	c.Command("migration", "create a migration", a.cliMigration, stdcli.CommandOptions{

@@ -27,6 +27,16 @@ func (a *App) cliApi(ctx *stdcli.Context) error {
 	return nil
 }
 
+func (a *App) cliCmd(ctx *stdcli.Context) error {
+	cmd := exec.Command("go", append([]string{"run", fmt.Sprintf("./cmd/%s", ctx.Args[0])}, ctx.Args[1:]...)...)
+
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	return cmd.Run()
+}
+
 func (a *App) cliMigrate(ctx *stdcli.Context) error {
 	if a.compose {
 		return a.run("api", "go", "run", ".", "migrate")
