@@ -142,7 +142,7 @@ github.com/ddollar/stdapi
 # github.com/ddollar/stdcli v1.0.3
 ## explicit; go 1.13
 github.com/ddollar/stdcli
-# github.com/ddollar/stdgraph v1.3.0
+# github.com/ddollar/stdgraph v1.3.1
 ## explicit; go 1.19
 github.com/ddollar/stdgraph
 # github.com/denis-tingaikin/go-header v0.4.3
