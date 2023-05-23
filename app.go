@@ -17,7 +17,7 @@ type App struct {
 	logger     *logger.Logger
 	migrations fs.FS
 	name       string
-	resolver   any
+	resolver   ResolverFunc
 	schema     string
 }
 

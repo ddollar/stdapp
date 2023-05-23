@@ -1,3 +1,5 @@
 package stdapp
 
-type ResolverFunc func(db Database) (any, error)
+import "github.com/go-pg/pg/v10/orm"
+
+type ResolverFunc func(db orm.DB) (any, error)

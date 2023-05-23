@@ -43,7 +43,11 @@ func (a *App) cliCmd(ctx *stdcli.Context) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	return cmd.Run()
+	if err := cmd.Run(); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
 }
 
 func (a *App) cliMigrate(ctx *stdcli.Context) error {
