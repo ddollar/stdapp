@@ -9,22 +9,62 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/ddollar/coalesce"
 	"github.com/ddollar/migrate"
 	"github.com/ddollar/stdcli"
 	"github.com/pkg/errors"
 )
 
 func (a *App) cliApi(ctx *stdcli.Context) error {
+	if ctx.Bool("development") {
+		return a.cliApiDevelopment(ctx)
+	}
+
 	g, err := a.graphQL()
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
-	if err := g.server.Listen("https", ":8000"); err != nil {
+	port := coalesce.Any(ctx.Int("port"), 8000)
+
+	if err := g.server.Listen("https", fmt.Sprintf(":%d", port)); err != nil {
 		return errors.WithStack(err)
 	}
 
 	return nil
+}
+
+func (a *App) cliApiDevelopment(ctx *stdcli.Context) error {
+	extensions := strings.Split(ctx.String("watch"), ",")
+
+	a.logger.At("watch").Logf("extensions=%q", strings.Join(extensions, ","))
+
+	for {
+		cmd := exec.Command("go", "run", ".", "api", "--port", fmt.Sprint(ctx.Int("port")))
+
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			Setpgid: true,
+		}
+
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		if err := cmd.Start(); err != nil {
+			return errors.WithStack(err)
+		}
+
+		if err := a.watchChanges(extensions); err != nil {
+			return errors.WithStack(err)
+		}
+
+		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGTERM); err != nil {
+			return errors.WithStack(err)
+		}
+
+		if _, err := cmd.Process.Wait(); err != nil {
+			return errors.WithStack(err)
+		}
+	}
 }
 
 func (a *App) cliCmd(ctx *stdcli.Context) error {
@@ -81,39 +121,6 @@ func (a *App) cliPgImport(ctx *stdcli.Context) error {
 
 func (a *App) cliPgReset(ctx *stdcli.Context) error {
 	return a.run("postgres", "psql", a.database, "-c", "drop schema public cascade; create schema public;")
-}
-
-func (a *App) cliReload(ctx *stdcli.Context) error {
-	extensions := strings.Split(ctx.String("extensions"), ",")
-
-	a.logger.At("reload").Logf("extensions=%q", strings.Join(extensions, ","))
-
-	for {
-		cmd := exec.Command("go", append([]string{"run", "."}, ctx.Args...)...)
-
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			Setpgid: true,
-		}
-
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-
-		if err := cmd.Start(); err != nil {
-			return errors.WithStack(err)
-		}
-
-		if err := a.watchChanges(extensions); err != nil {
-			return errors.WithStack(err)
-		}
-
-		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGTERM); err != nil {
-			return errors.WithStack(err)
-		}
-
-		if _, err := cmd.Process.Wait(); err != nil {
-			return errors.WithStack(err)
-		}
-	}
 }
 
 func (a *App) cliWeb(ctx *stdcli.Context) error {

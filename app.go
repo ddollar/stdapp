@@ -26,7 +26,13 @@ func (a *App) Run(args []string) int {
 
 	c := stdcli.New(a.name, version)
 
-	c.Command("api", "run the api server", a.cliApi, stdcli.CommandOptions{})
+	c.Command("api", "run the api server", a.cliApi, stdcli.CommandOptions{
+		Flags: []stdcli.Flag{
+			stdcli.BoolFlag("development", "d", "run in development mode"),
+			stdcli.IntFlag("port", "p", "port to listen on"),
+			stdcli.StringFlag("watch", "w", "comma separated list of file extensions to watch in development mode"),
+		},
+	})
 
 	c.Command("cmd", "run a command", a.cliCmd, stdcli.CommandOptions{
 		Validate: stdcli.ArgsMin(1),
@@ -47,11 +53,11 @@ func (a *App) Run(args []string) int {
 
 	c.Command("pg reset", "reset databaser", a.cliPgReset, stdcli.CommandOptions{})
 
-	c.Command("reload", "reload a command on changes", a.cliReload, stdcli.CommandOptions{
-		Flags: []stdcli.Flag{
-			stdcli.StringFlag("extensions", "e", "comma separated list of file extensions to watch"),
-		},
-	})
+	// c.Command("reload", "reload a command on changes", a.cliReload, stdcli.CommandOptions{
+	// 	Flags: []stdcli.Flag{
+	// 		stdcli.StringFlag("extensions", "e", "comma separated list of file extensions to watch"),
+	// 	},
+	// })
 
 	c.Command("web", "start web server", a.cliWeb, stdcli.CommandOptions{
 		Flags: []stdcli.Flag{
@@ -61,6 +67,37 @@ func (a *App) Run(args []string) int {
 
 	return c.Execute(args)
 }
+
+// func (a *App) watchAndExit(extensions []string) error {
+// 	a.logger.At("watch").Logf("extensions=%q", strings.Join(extensions, ","))
+
+// 	for {
+// 		cmd := exec.Command("go", append([]string{"run", "."}, ctx.Args...)...)
+
+// 		cmd.SysProcAttr = &syscall.SysProcAttr{
+// 			Setpgid: true,
+// 		}
+
+// 		cmd.Stdout = os.Stdout
+// 		cmd.Stderr = os.Stderr
+
+// 		if err := cmd.Start(); err != nil {
+// 			return errors.WithStack(err)
+// 		}
+
+// 		if err := a.watchChanges(extensions); err != nil {
+// 			return errors.WithStack(err)
+// 		}
+
+// 		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGTERM); err != nil {
+// 			return errors.WithStack(err)
+// 		}
+
+// 		if _, err := cmd.Process.Wait(); err != nil {
+// 			return errors.WithStack(err)
+// 		}
+// 	}
+// }
 
 func (a *App) run(container, command string, args ...string) error {
 	r := RunnerLocal

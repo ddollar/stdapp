@@ -13,6 +13,14 @@ import (
 const debounce = 100 * time.Millisecond
 
 // test
+func (a *App) watchAndExit(extensions []string) {
+	if err := a.watchChanges(extensions); err != nil {
+		a.logger.At("watch").Logf("error=%q", err)
+		os.Exit(1)
+	}
+
+	os.Exit(0)
+}
 
 func (a *App) watchChanges(extensions []string) error {
 	w, err := fsnotify.NewWatcher()
