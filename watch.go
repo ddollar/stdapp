@@ -2,8 +2,10 @@ package stdapp
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -12,14 +14,35 @@ import (
 
 const debounce = 100 * time.Millisecond
 
-// test
-func (a *App) watchAndExit(extensions []string) {
-	if err := a.watchChanges(extensions); err != nil {
-		a.logger.At("watch").Logf("error=%q", err)
-		os.Exit(1)
-	}
+func (a *App) watchAndReload(extensions []string, cmd string, args ...string) error {
+	a.logger.At("watch").Logf("extensions=%q", strings.Join(extensions, ","))
 
-	os.Exit(0)
+	for {
+		cmd := exec.Command("go", append([]string{"run", ".", cmd}, args...)...)
+
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			Setpgid: true,
+		}
+
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		if err := cmd.Start(); err != nil {
+			return errors.WithStack(err)
+		}
+
+		if err := a.watchChanges(extensions); err != nil {
+			return errors.WithStack(err)
+		}
+
+		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGTERM); err != nil {
+			return errors.WithStack(err)
+		}
+
+		if _, err := cmd.Process.Wait(); err != nil {
+			return errors.WithStack(err)
+		}
+	}
 }
 
 func (a *App) watchChanges(extensions []string) error {

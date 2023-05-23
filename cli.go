@@ -5,8 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
-	"syscall"
 	"time"
 
 	"github.com/ddollar/coalesce"
@@ -17,7 +15,7 @@ import (
 
 func (a *App) cliApi(ctx *stdcli.Context) error {
 	if ctx.Bool("development") {
-		return a.cliApiDevelopment(ctx)
+		return a.watchAndReload(parseExtensions(ctx.String("watch")), "api", "--port", fmt.Sprint(ctx.Int("port")))
 	}
 
 	g, err := a.graphQL()
@@ -34,40 +32,11 @@ func (a *App) cliApi(ctx *stdcli.Context) error {
 	return nil
 }
 
-func (a *App) cliApiDevelopment(ctx *stdcli.Context) error {
-	extensions := strings.Split(ctx.String("watch"), ",")
-
-	a.logger.At("watch").Logf("extensions=%q", strings.Join(extensions, ","))
-
-	for {
-		cmd := exec.Command("go", "run", ".", "api", "--port", fmt.Sprint(ctx.Int("port")))
-
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			Setpgid: true,
-		}
-
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-
-		if err := cmd.Start(); err != nil {
-			return errors.WithStack(err)
-		}
-
-		if err := a.watchChanges(extensions); err != nil {
-			return errors.WithStack(err)
-		}
-
-		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGTERM); err != nil {
-			return errors.WithStack(err)
-		}
-
-		if _, err := cmd.Process.Wait(); err != nil {
-			return errors.WithStack(err)
-		}
-	}
-}
-
 func (a *App) cliCmd(ctx *stdcli.Context) error {
+	if ctx.Bool("development") {
+		return a.watchAndReload(parseExtensions(ctx.String("watch")), "cmd", ctx.Args...)
+	}
+
 	cmd := exec.Command("go", append([]string{"run", fmt.Sprintf("./cmd/%s", ctx.Args[0])}, ctx.Args[1:]...)...)
 
 	cmd.Stdin = os.Stdin

@@ -2,6 +2,7 @@ package stdapp
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ddollar/logger"
 	"github.com/pkg/errors"
@@ -44,4 +45,8 @@ func New(opts Options) (*App, error) {
 	}
 
 	return a, nil
+}
+
+func parseExtensions(flag string) []string {
+	return strings.Split(flag, ",")
 }
