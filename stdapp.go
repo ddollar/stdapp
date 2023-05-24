@@ -14,7 +14,9 @@ func New(opts Options) (*App, error) {
 		logger:     logger.New(fmt.Sprintf("ns=%s", opts.Name)),
 		migrations: opts.Migrations,
 		name:       opts.Name,
+		resolver:   opts.Resolver,
 		schema:     opts.Schema,
+		web:        opts.Web,
 	}
 
 	return a, nil

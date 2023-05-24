@@ -101,6 +101,19 @@ func (a *App) cliWeb(ctx *stdcli.Context) error {
 		return a.cliWebDevelopment()
 	}
 
+	s, err := a.spa()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("s: %+v\n", s)
+
+	port := coalesce.Any(ctx.Int("port"), 8000)
+
+	if err := s.server.Listen("https", fmt.Sprintf(":%d", port)); err != nil {
+		return errors.WithStack(err)
+	}
+
 	return nil
 }
 

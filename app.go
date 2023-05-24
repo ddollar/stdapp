@@ -19,6 +19,7 @@ type App struct {
 	name       string
 	resolver   ResolverFunc
 	schema     string
+	web        fs.FS
 }
 
 func (a *App) Run(args []string) int {
@@ -60,6 +61,7 @@ func (a *App) Run(args []string) int {
 	c.Command("web", "start web server", a.cliWeb, stdcli.CommandOptions{
 		Flags: []stdcli.Flag{
 			stdcli.BoolFlag("development", "d", "run in development mode (vite)"),
+			stdcli.IntFlag("port", "p", "port to listen on"),
 		},
 	})
 

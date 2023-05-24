@@ -9,4 +9,5 @@ type Options struct {
 	Name       string
 	Resolver   ResolverFunc
 	Schema     string
+	Web        fs.FS
 }
