@@ -5,9 +5,9 @@ import (
 )
 
 type Options struct {
-	Middleware []Middleware
 	Compose    bool
 	Database   string
+	Middleware []Middleware
 	Migrations fs.FS
 	Name       string
 	Resolver   ResolverFunc
