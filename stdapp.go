@@ -12,6 +12,7 @@ func New(opts Options) (*App, error) {
 		compose:    opts.Compose,
 		database:   opts.Database,
 		logger:     logger.New(fmt.Sprintf("ns=%s", opts.Name)),
+		middleware: opts.Middleware,
 		migrations: opts.Migrations,
 		name:       opts.Name,
 		resolver:   opts.Resolver,

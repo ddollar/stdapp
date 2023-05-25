@@ -15,6 +15,7 @@ type App struct {
 	compose    bool
 	database   string
 	logger     *logger.Logger
+	middleware []Middleware
 	migrations fs.FS
 	name       string
 	resolver   ResolverFunc

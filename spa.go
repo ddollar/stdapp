@@ -19,7 +19,7 @@ func (a *App) spa() (*SPA, error) {
 		server: stdapi.New(a.name, a.name),
 	}
 
-	s.server.Router.Static("", http.FS(s))
+	s.server.Router.Handle("/", a.WithMiddleware(http.FileServer(http.FS(s))))
 
 	return s, nil
 
