@@ -2,9 +2,11 @@ package stdapp
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/ddollar/coalesce"
@@ -26,6 +28,30 @@ func (a *App) cliApi(ctx *stdcli.Context) error {
 	port := coalesce.Any(ctx.Int("port"), 8000)
 
 	if err := g.server.Listen("https", fmt.Sprintf(":%d", port)); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (a *App) cliDeployment(ctx *stdcli.Context) error {
+	data, err := exec.Command("git", "remote", "get-url", "deploy").CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("no deploy remote found")
+	}
+
+	u, err := url.Parse(strings.TrimSpace(string(data)))
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command("ssh", u.Host, fmt.Sprintf(`cd %s && bash -l -c "sa %s"`, strings.TrimPrefix(u.Path, "/"), strings.Join(ctx.Args, " ")))
+
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
 		return errors.WithStack(err)
 	}
 

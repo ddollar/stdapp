@@ -43,6 +43,8 @@ func (a *App) Run(args []string) int {
 		Validate: stdcli.ArgsMin(1),
 	})
 
+	c.Command("deployment", "run a command on the deploy target", a.cliDeployment, stdcli.CommandOptions{})
+
 	c.Command("migrate", "run migrations", a.cliMigrate, stdcli.CommandOptions{})
 
 	c.Command("migration", "create a migration", a.cliMigration, stdcli.CommandOptions{

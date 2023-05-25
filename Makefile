@@ -3,7 +3,7 @@
 all: build
 
 build:
-	go build .
+	go build -o dist -mod=vendor --ldflags="-s -w" . ./cmd/sa
 
 lint:
 	go run ./vendor/github.com/golangci/golangci-lint/cmd/golangci-lint/main.go run

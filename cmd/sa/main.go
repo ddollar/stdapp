@@ -35,6 +35,10 @@ func main() {
 }
 
 func options() (*stdapp.Options, error) {
+	if _, err := os.Stat("docker-compose.yml"); os.IsNotExist(err) {
+		return nil, fmt.Errorf("must run in a directory with docker-compose.yml")
+	}
+
 	data, err := exec.Command("docker", "compose", "config", "--format=json").CombinedOutput()
 	if err != nil {
 		return nil, errors.WithStack(err)
