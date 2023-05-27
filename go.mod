@@ -9,7 +9,7 @@ require (
 	github.com/ddollar/migrate v1.3.0
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.0.3
-	github.com/ddollar/stdgraph v1.3.1
+	github.com/ddollar/stdgraph v1.4.0
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-pg/pg/v10 v10.11.0
 	github.com/golangci/golangci-lint v1.52.2
