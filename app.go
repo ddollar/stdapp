@@ -1,7 +1,9 @@
 package stdapp
 
 import (
+	"io/fs"
 	"os"
+	"time"
 
 	"github.com/ddollar/logger"
 	"github.com/ddollar/stdcli"
@@ -13,19 +15,22 @@ var version = "dev"
 type App struct {
 	logger *logger.Logger
 	opts   Options
-	// compose    bool
-	// database   string
-	// middleware []Middleware
-	// migrations fs.FS
-	// name       string
-	// resolver   ResolverFunc
-	// schema     string
-	// web        fs.FS
+}
+
+type Options struct {
+	Compose      bool
+	Database     string
+	Middleware   []Middleware
+	Migrations   fs.FS
+	Name         string
+	Prefix       string
+	Resolver     ResolverFunc
+	Schema       string
+	Web          fs.FS
+	WriteTimeout time.Duration
 }
 
 func (a *App) Run(args []string) int {
-	// fmt.Printf("args: %+v\n", args)
-
 	c := stdcli.New(a.opts.Name, version)
 
 	c.Command("api", "run the api server", a.cliApi, stdcli.CommandOptions{

@@ -1,6 +1,7 @@
 package stdapp
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ddollar/coalesce"
@@ -45,7 +46,7 @@ func (a *App) graphQL() (*GraphQL, error) {
 		return nil, errors.WithStack(err)
 	}
 
-	g.server.Router.PathPrefix("/api/graph").Handler(a.WithMiddleware(h))
+	g.server.Router.PathPrefix(fmt.Sprintf("%s/api/graph", a.opts.Prefix)).Handler(a.WithMiddleware(h))
 
 	return g, nil
 }
