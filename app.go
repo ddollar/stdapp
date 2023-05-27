@@ -1,7 +1,6 @@
 package stdapp
 
 import (
-	"io/fs"
 	"os"
 
 	"github.com/ddollar/logger"
@@ -12,21 +11,22 @@ import (
 var version = "dev"
 
 type App struct {
-	compose    bool
-	database   string
-	logger     *logger.Logger
-	middleware []Middleware
-	migrations fs.FS
-	name       string
-	resolver   ResolverFunc
-	schema     string
-	web        fs.FS
+	logger *logger.Logger
+	opts   Options
+	// compose    bool
+	// database   string
+	// middleware []Middleware
+	// migrations fs.FS
+	// name       string
+	// resolver   ResolverFunc
+	// schema     string
+	// web        fs.FS
 }
 
 func (a *App) Run(args []string) int {
 	// fmt.Printf("args: %+v\n", args)
 
-	c := stdcli.New(a.name, version)
+	c := stdcli.New(a.opts.Name, version)
 
 	c.Command("api", "run the api server", a.cliApi, stdcli.CommandOptions{
 		Flags: []stdcli.Flag{
@@ -74,7 +74,7 @@ func (a *App) Run(args []string) int {
 func (a *App) run(container, command string, args ...string) error {
 	r := RunnerLocal
 
-	if a.compose {
+	if a.opts.Compose {
 		tty, err := isTTY(os.Stdin)
 		if err != nil {
 			return errors.WithStack(err)

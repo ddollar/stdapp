@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/cespare/reflex v0.3.1
 	github.com/ddollar/coalesce v1.1.0
+	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
 	github.com/ddollar/migrate v1.3.0
 	github.com/ddollar/stdapi v1.0.3
@@ -49,7 +50,6 @@ require (
 	github.com/daixiang0/gci v0.10.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/ddollar/graphql-go v1.5.0-ddollar2 // indirect
-	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2 // indirect
 	github.com/denis-tingaikin/go-header v0.4.3 // indirect
 	github.com/esimonov/ifshort v1.0.4 // indirect
 	github.com/ettle/strcase v0.1.1 // indirect

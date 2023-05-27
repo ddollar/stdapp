@@ -16,7 +16,7 @@ type SPA struct {
 func (a *App) spa() (*SPA, error) {
 	s := &SPA{
 		app:    a,
-		server: stdapi.New(a.name, a.name),
+		server: stdapi.New(a.opts.Name, a.opts.Name),
 	}
 
 	s.server.Router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.FS(s))))
@@ -26,10 +26,10 @@ func (a *App) spa() (*SPA, error) {
 }
 
 func (s SPA) Open(name string) (fs.File, error) {
-	if f, err := s.app.web.Open(name); err == nil {
+	if f, err := s.app.opts.Web.Open(name); err == nil {
 		return f, nil
 	} else {
-		f, err := s.app.web.Open("index.html")
+		f, err := s.app.opts.Web.Open("index.html")
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}

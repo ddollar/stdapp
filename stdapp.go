@@ -9,15 +9,16 @@ import (
 
 func New(opts Options) (*App, error) {
 	a := &App{
-		compose:    opts.Compose,
-		database:   opts.Database,
-		logger:     logger.New(fmt.Sprintf("ns=%s", opts.Name)),
-		middleware: opts.Middleware,
-		migrations: opts.Migrations,
-		name:       opts.Name,
-		resolver:   opts.Resolver,
-		schema:     opts.Schema,
-		web:        opts.Web,
+		opts:   opts,
+		logger: logger.New(fmt.Sprintf("ns=%s", opts.Name)),
+		// compose:    opts.Compose,
+		// database:   opts.Database,
+		// middleware: opts.Middleware,
+		// migrations: opts.Migrations,
+		// name:       opts.Name,
+		// resolver:   opts.Resolver,
+		// schema:     opts.Schema,
+		// web:        opts.Web,
 	}
 
 	return a, nil

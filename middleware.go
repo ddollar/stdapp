@@ -7,7 +7,7 @@ import (
 type Middleware func(next http.HandlerFunc) http.HandlerFunc
 
 func (a *App) WithMiddleware(h http.Handler) http.Handler {
-	return http.HandlerFunc(wrapMiddleware(h.ServeHTTP, a.middleware))
+	return http.HandlerFunc(wrapMiddleware(h.ServeHTTP, a.opts.Middleware))
 }
 
 func wrapMiddleware(fn http.HandlerFunc, ms []Middleware) http.HandlerFunc {
