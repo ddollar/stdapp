@@ -1,0 +1,53 @@
+networks:
+  router:
+    external: true
+    name: router
+services:
+  api:
+    build: .
+    command: app api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://app:app@postgres:5432/app?sslmode=disable
+    labels:
+      - "traefik.docker.network=router"
+      - "traefik.enable=true"
+      - "traefik.http.routers.stdapp-init-api.entrypoints=https"
+      - "traefik.http.routers.stdapp-init-api.rule=Host(`${DOMAIN:-stdapp-init.localhost}`) && Path(`/api/graph`)"
+      - "traefik.http.routers.stdapp-init-api.tls=true"
+      - "traefik.http.services.stdapp-init-api.loadbalancer.server.scheme=https"
+    networks:
+      - router
+      - default
+    restart: unless-stopped
+  web:
+    build: .
+    command: app web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.stdapp-init-web.entrypoints=https"
+      - "traefik.http.routers.stdapp-init-web.rule=Host(`${DOMAIN:-stdapp-init.localhost}`)"
+      - "traefik.http.routers.stdapp-init-web.tls=true"
+      - "traefik.http.services.stdapp-init-web.loadbalancer.server.scheme=https"
+    networks:
+      - router
+  postgres:
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
+    image: postgres:15
+    labels:
+      - docker-volume-backup.stop-during-backup=banker
+    restart: unless-stopped
+    volumes:
+      - postgres:/var/lib/postgresql/data
+volumes:
+  postgres:

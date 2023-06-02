@@ -1,0 +1,14 @@
+services:
+  api:
+    build:
+      target: development
+    command: api --development --watch go,graphql
+    volumes:
+      - .:/src
+  web:
+    build:
+      target: development
+    command: web --development
+    volumes:
+      - ./web:/src/web
+      - /src/web/node_modules

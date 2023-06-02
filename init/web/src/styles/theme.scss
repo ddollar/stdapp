@@ -1,0 +1,77 @@
+@import "bootstrap";
+
+body {
+	background: #f0f0f0;
+}
+
+#app {
+	margin-top: 72px;
+}
+
+.card {
+	.card-header {
+		color: $gray-600;
+		font-size: 0.9rem;
+		font-weight: bold;
+	}
+}
+
+table.table {
+	margin-bottom: 0;
+
+	thead {
+		background: #ddd;
+	}
+
+	tbody {
+		background-color: #fff;
+	}
+
+	> :not(:first-child) {
+		border-top: 2px #ddd solid;
+	}
+
+	th,
+	td {
+		white-space: nowrap;
+	}
+
+	th.expand,
+	td.expand {
+		width: 100%;
+	}
+
+	th.wrap,
+	td.wrap {
+		white-space: normal;
+	}
+}
+
+.v-select {
+	background-color: white;
+}
+
+.modal {
+	filter: drop-shadow(8px 8px 12px $gray-600);
+
+	.modal-header,
+	.modal-footer {
+		background-color: $gray-300;
+	}
+}
+
+@include media-breakpoint-down(sm) {
+	#app {
+		margin-top: 56px;
+		padding: 0;
+	}
+
+	table.table {
+		font-size: 0.7rem;
+
+		th,
+		td {
+			padding: 0.3rem 0.5rem;
+		}
+	}
+}

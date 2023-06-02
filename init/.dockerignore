@@ -1,5 +1,4 @@
 .env
 coverage.txt
 dist
-docker-compose.override.yml
 web/.vite

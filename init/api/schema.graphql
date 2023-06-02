@@ -1,0 +1,17 @@
+schema {
+	mutation: Mutation
+  query: Query
+  subscription: Subscription
+}
+
+scalar DateTime
+
+type Mutation {
+}
+
+type Query {
+	ping: Boolean!
+}
+
+type Subscription {
+}
