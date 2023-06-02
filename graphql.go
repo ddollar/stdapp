@@ -34,7 +34,7 @@ func (a *App) graphQL() (*GraphQL, error) {
 
 	g := &GraphQL{
 		app:    a,
-		server: stdapi.New(a.opts.Name, a.opts.Name),
+		server: stdapi.New("api", a.opts.Name),
 	}
 
 	gopts := []graphqlws.Option{

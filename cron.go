@@ -22,20 +22,47 @@ var cronEntryMatchers = []*regexp.Regexp{
 	regexp.MustCompile(`^((?:(?:(?:\d+,)+\d+|(?:\d+(?:\/|-|#)\d+)|\d+L?|\*(?:\/\d+)?|L(?:-\d+)?|\?|[A-Z]{3}(?:-[A-Z]{3})?) ?){5,6}) (.*)$`),
 }
 
-func cronStart(ctx *stdcli.Context, dc *docker.Client, cs []types.Container) error {
+type Cron struct {
+	ctx    *stdcli.Context
+	docker *docker.Client
+}
+
+func NewCron(ctx *stdcli.Context) (*Cron, error) {
+	dc, err := dockerClient()
+	if err != nil {
+		return nil, err
+	}
+
+	c := &Cron{
+		ctx:    ctx,
+		docker: dc,
+	}
+
+	return c, nil
+}
+
+func (cc *Cron) Run() error {
+	cs, err := dockerProjectContainers(cc.docker)
+	if err != nil {
+		return err
+	}
+
 	cr := cron.New(cron.WithParser(cron.NewParser(
 		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
 	)))
 
 	for _, c := range cs {
 		for k, v := range c.Labels {
-			if strings.HasPrefix(k, cronPrefix) {
+			if !strings.HasPrefix(k, cronPrefix) {
+				continue
+			}
+
+			if schedule, command, ok := cronEntry(v); ok {
 				name := strings.TrimPrefix(k, cronPrefix)
-				if schedule, command, ok := cronEntry(v); ok {
-					ctx.Writef("ns=cron at=start name=%q schedule=%q command=%q\n", name, schedule, command)
-					if _, err := cr.AddFunc(schedule, cronJob(ctx, dc, name, c.ID, command)); err != nil {
-						return err
-					}
+				cc.ctx.Writef("ns=cron at=start name=%q schedule=%q command=%q\n", name, schedule, command)
+
+				if _, err := cr.AddFunc(schedule, cc.job(name, c.ID, command)); err != nil {
+					return err
 				}
 			}
 		}
@@ -46,17 +73,7 @@ func cronStart(ctx *stdcli.Context, dc *docker.Client, cs []types.Container) err
 	return nil
 }
 
-func cronEntry(entry string) (string, string, bool) {
-	for _, m := range cronEntryMatchers {
-		if parts := m.FindStringSubmatch(entry); len(parts) == 3 {
-			return parts[1], parts[2], true
-		}
-	}
-
-	return "", "", false
-}
-
-func cronExec(dc *docker.Client, id, command string) error {
+func (cc *Cron) exec(id, command string) error {
 	ctx := context.Background()
 
 	cmd, err := shellquote.Split(command)
@@ -70,7 +87,7 @@ func cronExec(dc *docker.Client, id, command string) error {
 		AttachStderr: true,
 	}
 
-	e, err := dc.ContainerExecCreate(ctx, id, copts)
+	e, err := cc.docker.ContainerExecCreate(ctx, id, copts)
 	if err != nil {
 		return err
 	}
@@ -80,7 +97,7 @@ func cronExec(dc *docker.Client, id, command string) error {
 		// ErrorStream:  os.Stderr,
 	}
 
-	res, err := dc.ContainerExecAttach(ctx, e.ID, sopts)
+	res, err := cc.docker.ContainerExecAttach(ctx, e.ID, sopts)
 	if err != nil {
 		return err
 	}
@@ -90,13 +107,23 @@ func cronExec(dc *docker.Client, id, command string) error {
 	return nil
 }
 
-func cronJob(ctx *stdcli.Context, dc *docker.Client, name, id, command string) func() {
+func (cc *Cron) job(name, id, command string) func() {
 	return func() {
-		ctx.Writef("ns=cron at=run name=%q command=%q\n", name, command)
+		cc.ctx.Writef("ns=cron at=run name=%q command=%q\n", name, command)
 
-		if err := cronExec(dc, id, command); err != nil {
-			ctx.Writef("ns=cron at=run name=%q error=%q\n", name, err)
+		if err := cc.exec(id, command); err != nil {
+			cc.ctx.Writef("ns=cron at=run name=%q error=%q\n", name, err)
 			return
 		}
 	}
+}
+
+func cronEntry(entry string) (string, string, bool) {
+	for _, m := range cronEntryMatchers {
+		if parts := m.FindStringSubmatch(entry); len(parts) == 3 {
+			return parts[1], parts[2], true
+		}
+	}
+
+	return "", "", false
 }

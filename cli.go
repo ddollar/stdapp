@@ -57,17 +57,12 @@ func (a *App) cliCron(ctx *stdcli.Context) error {
 		return a.watchAndReload(parseExtensions(ctx.String("watch")), "cron")
 	}
 
-	dc, err := dockerClient()
+	cc, err := NewCron(ctx)
 	if err != nil {
 		return err
 	}
 
-	cs, err := dockerProjectContainers(dc)
-	if err != nil {
-		return err
-	}
-
-	if err := cronStart(ctx, dc, cs); err != nil {
+	if err := cc.Run(); err != nil {
 		return err
 	}
 
