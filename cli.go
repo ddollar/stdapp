@@ -12,7 +12,6 @@ import (
 	"github.com/ddollar/coalesce"
 	"github.com/ddollar/migrate"
 	"github.com/ddollar/stdcli"
-	docker "github.com/fsouza/go-dockerclient"
 	"github.com/pkg/errors"
 )
 
@@ -35,6 +34,24 @@ func (a *App) cliApi(ctx *stdcli.Context) error {
 	return nil
 }
 
+func (a *App) cliCmd(ctx *stdcli.Context) error {
+	if ctx.Bool("development") {
+		return a.watchAndReload(parseExtensions(ctx.String("watch")), "cmd", ctx.Args...)
+	}
+
+	cmd := exec.Command("go", append([]string{"run", fmt.Sprintf("./cmd/%s", ctx.Args[0])}, ctx.Args[1:]...)...)
+
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
 func (a *App) cliCron(ctx *stdcli.Context) error {
 	if ctx.Bool("development") {
 		return a.watchAndReload(parseExtensions(ctx.String("watch")), "cron")
@@ -45,23 +62,7 @@ func (a *App) cliCron(ctx *stdcli.Context) error {
 		return err
 	}
 
-	c, err := hostContainer(dc)
-	if err != nil {
-		return err
-	}
-
-	project, ok := c.Config.Labels["com.docker.compose.project"]
-	if !ok {
-		return fmt.Errorf("could not find docker compose project name")
-	}
-
-	opts := docker.ListContainersOptions{
-		Filters: map[string][]string{
-			"label": []string{fmt.Sprintf("com.docker.compose.project=%s", project)},
-		},
-	}
-
-	cs, err := dc.ListContainers(opts)
+	cs, err := dockerProjectContainers(dc)
 	if err != nil {
 		return err
 	}
@@ -85,24 +86,6 @@ func (a *App) cliDeployment(ctx *stdcli.Context) error {
 	}
 
 	cmd := exec.Command("ssh", u.Host, fmt.Sprintf(`cd %s && bash -l -c "sa %s"`, strings.TrimPrefix(u.Path, "/"), strings.Join(ctx.Args, " ")))
-
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	if err := cmd.Run(); err != nil {
-		return errors.WithStack(err)
-	}
-
-	return nil
-}
-
-func (a *App) cliCmd(ctx *stdcli.Context) error {
-	if ctx.Bool("development") {
-		return a.watchAndReload(parseExtensions(ctx.String("watch")), "cmd", ctx.Args...)
-	}
-
-	cmd := exec.Command("go", append([]string{"run", fmt.Sprintf("./cmd/%s", ctx.Args[0])}, ctx.Args[1:]...)...)
 
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
