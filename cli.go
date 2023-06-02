@@ -93,6 +93,16 @@ func (a *App) cliDeployment(ctx *stdcli.Context) error {
 	return nil
 }
 
+func (a *App) cliInit(ctx *stdcli.Context) error {
+	name := ctx.Arg(0)
+
+	if err := initApp(name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (a *App) cliMigrate(ctx *stdcli.Context) error {
 	if a.opts.Compose {
 		return a.run("api", "go", "run", ".", "migrate")

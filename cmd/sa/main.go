@@ -35,8 +35,12 @@ func main() {
 }
 
 func options() (*stdapp.Options, error) {
+	opts := &stdapp.Options{
+		Compose: true,
+	}
+
 	if _, err := os.Stat("docker-compose.yml"); os.IsNotExist(err) {
-		return nil, fmt.Errorf("must run in a directory with docker-compose.yml")
+		return opts, nil
 	}
 
 	data, err := exec.Command("docker", "compose", "config", "--format=json").CombinedOutput()
@@ -50,15 +54,13 @@ func options() (*stdapp.Options, error) {
 		return nil, errors.WithStack(err)
 	}
 
+	opts.Name = c.Name
+
 	svc := coalesce.Any(c.Services["api"], c.Services["web"])
 	env := svc.Environment
 	dburl := coalesce.Any(env["POSTGRES_URL"], env["DATABASE_URL"])
 
-	opts := &stdapp.Options{
-		Compose:  true,
-		Database: dburl,
-		Name:     c.Name,
-	}
+	opts.Database = dburl
 
 	return opts, nil
 }

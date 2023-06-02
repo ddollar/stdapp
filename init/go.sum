@@ -140,6 +140,8 @@ github.com/ddollar/migrate v1.3.0 h1:MqJislItgJtW/+qFq4wgA8qqWR+MTVjct+JGBzaZKFE
 github.com/ddollar/migrate v1.3.0/go.mod h1:Yu3XMlyGiiJrZ2x3bFCZoDqLI9vlp4ZynlEsHXZUs9A=
 github.com/ddollar/stdapi v1.0.3 h1:/Nsm2UmLh0GB0IUFBL8KXrSOUreW/yAwfyUvJ/CE+nU=
 github.com/ddollar/stdapi v1.0.3/go.mod h1:ck4AfP20jGAgzx0laO7NSvDBh6uKmqYJAWTvcvs4Clc=
+github.com/ddollar/stdapp v0.0.0-20230602175546-24a7c7190180 h1:neeOaVOQgh/AEeVH8/I3l6Cmw5gAH38j9dcFvozmvIs=
+github.com/ddollar/stdapp v0.0.0-20230602175546-24a7c7190180/go.mod h1:EY0BNsAMCjwvfB7Dlz7ZjfytR0h5qLbqsUHfU0zEcs0=
 github.com/ddollar/stdcli v1.0.3 h1:YwT8pddVORCQ7vCACjeWHGFIM6ef7zzKiDvfZ0yqb/s=
 github.com/ddollar/stdcli v1.0.3/go.mod h1:ueOIoD2L64xpBoAPThSfgFGiNFyXPteRouxjjl3AP/4=
 github.com/ddollar/stdgraph v1.4.0 h1:NrFngWL2mkxEXN2CF1N50RhY6Ac+q0MueyEVjYqBET0=
