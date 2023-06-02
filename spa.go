@@ -1,7 +1,6 @@
 package stdapp
 
 import (
-	"fmt"
 	"io/fs"
 	"net/http"
 
@@ -20,9 +19,7 @@ func (a *App) spa() (*SPA, error) {
 		server: stdapi.New(a.opts.Name, a.opts.Name),
 	}
 
-	prefix := fmt.Sprintf("%s/", a.opts.Prefix)
-
-	s.server.Router.PathPrefix(prefix).Handler(http.StripPrefix(prefix, http.FileServer(http.FS(s))))
+	s.server.Router.PathPrefix(a.opts.Prefix).Handler(http.StripPrefix(a.opts.Prefix, http.FileServer(http.FS(s))))
 
 	return s, nil
 
