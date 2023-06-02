@@ -12,6 +12,7 @@ import (
 	"github.com/ddollar/coalesce"
 	"github.com/ddollar/migrate"
 	"github.com/ddollar/stdcli"
+	docker "github.com/fsouza/go-dockerclient"
 	"github.com/pkg/errors"
 )
 
@@ -29,6 +30,44 @@ func (a *App) cliApi(ctx *stdcli.Context) error {
 
 	if err := g.server.Listen("https", fmt.Sprintf(":%d", port)); err != nil {
 		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (a *App) cliCron(ctx *stdcli.Context) error {
+	if ctx.Bool("development") {
+		return a.watchAndReload(parseExtensions(ctx.String("watch")), "cron")
+	}
+
+	dc, err := dockerClient()
+	if err != nil {
+		return err
+	}
+
+	c, err := hostContainer(dc)
+	if err != nil {
+		return err
+	}
+
+	project, ok := c.Config.Labels["com.docker.compose.project"]
+	if !ok {
+		return fmt.Errorf("could not find docker compose project name")
+	}
+
+	opts := docker.ListContainersOptions{
+		Filters: map[string][]string{
+			"label": []string{fmt.Sprintf("com.docker.compose.project=%s", project)},
+		},
+	}
+
+	cs, err := dc.ListContainers(opts)
+	if err != nil {
+		return err
+	}
+
+	if err := cronStart(ctx, dc, cs); err != nil {
+		return err
 	}
 
 	return nil
@@ -147,6 +186,8 @@ func (a *App) cliWebDevelopment() error {
 	}
 
 	cmd := exec.Command("npx", "vite", "--host")
+
+	cmd.Env = append(os.Environ(), fmt.Sprintf("VITE_PREFIX=%s", coalesce.Any(a.opts.Prefix, "/")))
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

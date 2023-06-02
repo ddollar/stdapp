@@ -1,14 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
 
-	"github.com/ddollar/coalesce"
 	"github.com/ddollar/stdapp"
-	"github.com/pkg/errors"
 )
 
 type compose struct {
@@ -35,29 +31,34 @@ func main() {
 }
 
 func options() (*stdapp.Options, error) {
-	if _, err := os.Stat("docker-compose.yml"); os.IsNotExist(err) {
-		return nil, fmt.Errorf("must run in a directory with docker-compose.yml")
-	}
+	// if _, err := os.Stat("docker-compose.yml"); os.IsNotExist(err) {
+	// 	return nil, fmt.Errorf("must run in a directory with docker-compose.yml")
+	// }
 
-	data, err := exec.Command("docker", "compose", "config", "--format=json").CombinedOutput()
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
+	// data, err := exec.Command("docker", "compose", "config", "--format=json").CombinedOutput()
+	// if err != nil {
+	// 	return nil, errors.WithStack(err)
+	// }
 
-	var c compose
+	// var c compose
 
-	if err := json.Unmarshal(data, &c); err != nil {
-		return nil, errors.WithStack(err)
-	}
+	// if err := json.Unmarshal(data, &c); err != nil {
+	// 	return nil, errors.WithStack(err)
+	// }
 
-	svc := coalesce.Any(c.Services["api"], c.Services["web"])
-	env := svc.Environment
-	dburl := coalesce.Any(env["POSTGRES_URL"], env["DATABASE_URL"])
+	// svc := coalesce.Any(c.Services["api"], c.Services["web"])
+	// env := svc.Environment
+	// dburl := coalesce.Any(env["POSTGRES_URL"], env["DATABASE_URL"])
+
+	// opts := &stdapp.Options{
+	// 	Compose:  true,
+	// 	Database: dburl,
+	// 	Name:     c.Name,
+	// }
 
 	opts := &stdapp.Options{
-		Compose:  true,
-		Database: dburl,
-		Name:     c.Name,
+		Compose: true,
+		Name:    "foo",
 	}
 
 	return opts, nil

@@ -12,6 +12,11 @@ import (
 
 var version = "dev"
 
+var (
+	flagDevelopment = stdcli.BoolFlag("development", "d", "run in development mode")
+	flagWatch       = stdcli.StringFlag("watch", "w", "comma separated list of file extensions to watch in development mode")
+)
+
 type App struct {
 	logger *logger.Logger
 	opts   Options
@@ -35,18 +40,25 @@ func (a *App) Run(args []string) int {
 
 	c.Command("api", "run the api server", a.cliApi, stdcli.CommandOptions{
 		Flags: []stdcli.Flag{
-			stdcli.BoolFlag("development", "d", "run in development mode"),
+			flagDevelopment,
+			flagWatch,
 			stdcli.IntFlag("port", "p", "port to listen on"),
-			stdcli.StringFlag("watch", "w", "comma separated list of file extensions to watch in development mode"),
 		},
 	})
 
 	c.Command("cmd", "run a command", a.cliCmd, stdcli.CommandOptions{
 		Flags: []stdcli.Flag{
-			stdcli.BoolFlag("development", "d", "run in development mode"),
-			stdcli.StringFlag("watch", "w", "comma separated list of file extensions to watch in development mode"),
+			flagDevelopment,
+			flagWatch,
 		},
 		Validate: stdcli.ArgsMin(1),
+	})
+
+	c.Command("cron", "run cron daemon", a.cliCron, stdcli.CommandOptions{
+		Flags: []stdcli.Flag{
+			flagDevelopment,
+			flagWatch,
+		},
 	})
 
 	c.Command("deployment", "run a command on the deploy target", a.cliDeployment, stdcli.CommandOptions{})
@@ -68,6 +80,7 @@ func (a *App) Run(args []string) int {
 
 	c.Command("web", "start web server", a.cliWeb, stdcli.CommandOptions{
 		Flags: []stdcli.Flag{
+			flagDevelopment,
 			stdcli.BoolFlag("development", "d", "run in development mode (vite)"),
 			stdcli.IntFlag("port", "p", "port to listen on"),
 		},
