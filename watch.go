@@ -17,6 +17,12 @@ const debounce = 100 * time.Millisecond
 func (a *App) watchAndReload(extensions []string, cmd string, args ...string) error {
 	a.logger.At("watch").Logf("extensions=%q", strings.Join(extensions, ","))
 
+	ch := make(chan string)
+
+	if err := a.watchChanges(extensions, ch); err != nil {
+		return err
+	}
+
 	for {
 		cmd := exec.Command("go", append([]string{"run", ".", cmd}, args...)...)
 
@@ -31,9 +37,7 @@ func (a *App) watchAndReload(extensions []string, cmd string, args ...string) er
 			return errors.WithStack(err)
 		}
 
-		if err := a.watchChanges(extensions); err != nil {
-			return errors.WithStack(err)
-		}
+		a.logger.At("change").Logf("file=%q", <-ch)
 
 		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGTERM); err != nil {
 			return errors.WithStack(err)
@@ -45,7 +49,7 @@ func (a *App) watchAndReload(extensions []string, cmd string, args ...string) er
 	}
 }
 
-func (a *App) watchChanges(extensions []string) error {
+func (a *App) watchChanges(extensions []string, ch chan<- string) error {
 	w, err := fsnotify.NewWatcher()
 	if err != nil {
 		return errors.WithStack(err)
@@ -81,23 +85,28 @@ func (a *App) watchChanges(extensions []string) error {
 		}
 	}
 
-	var e fsnotify.Event
-
 	t := time.NewTimer(1 * time.Hour)
 
 	if !t.Stop() {
 		<-t.C
 	}
 
+	go watchLoop(ch, w, t)
+
+	return nil
+}
+
+func watchLoop(ch chan<- string, w *fsnotify.Watcher, t *time.Timer) {
+	var e fsnotify.Event
+
 	for {
 		select {
 		case e = <-w.Events:
-			if e.Op.Has(fsnotify.Write) {
+			if e.Op.Has(fsnotify.Write) || e.Op.Has(fsnotify.Chmod) {
 				t.Reset(debounce)
 			}
 		case <-t.C:
-			a.logger.At("change").Logf("file=%q", e.Name)
-			return nil
+			ch <- e.Name
 		}
 	}
 }
