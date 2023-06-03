@@ -29,7 +29,7 @@ ENTRYPOINT ["go", "run", "."]
 FROM ghcr.io/ddollar/go:1.20 AS package
 
 ENV CGO_ENABLED=0
-ENV VITE_PREFIX=/network
+ENV VITE_PREFIX=/
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 

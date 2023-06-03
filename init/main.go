@@ -4,8 +4,6 @@ import (
 	"embed"
 	"fmt"
 	"io/fs"
-	"net/http"
-	"net/netip"
 	"os"
 	"time"
 
@@ -41,7 +39,6 @@ func app() (*stdapp.App, error) {
 
 	opts := stdapp.Options{
 		Database:     os.Getenv("DATABASE_URL"),
-		Middleware:   []stdapp.Middleware{ensureAllowedNetwork},
 		Migrations:   migrations,
 		Name:         "stdapp-init",
 		Resolver:     api.New,
@@ -56,38 +53,4 @@ func app() (*stdapp.App, error) {
 	}
 
 	return a, nil
-}
-
-var allowedNetworks = []netip.Prefix{
-	netip.MustParsePrefix("10.1.48.0/22"),
-}
-
-func ensureAllowedNetwork(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		remote := r.Header.Get("X-Forwarded-For")
-
-		if os.Getenv("DEVELOPMENT") == "true" {
-			fmt.Printf("ns=network at=ensure remote=%q development=true\n", remote)
-			next(w, r)
-			return
-		}
-
-		addr, err := netip.ParseAddr(remote)
-		if err != nil {
-			fmt.Printf("ns=network at=ensure remote=%q error=%q\n", remote, err.Error())
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		for _, net := range allowedNetworks {
-			if net.Contains(addr) {
-				fmt.Printf("ns=network at=ensure remote=%q allowed=true net=%q\n", remote, net)
-				next(w, r)
-				return
-			}
-		}
-
-		fmt.Printf("ns=network at=ensure remote=%q allowed=false\n", remote)
-		http.Error(w, "not authorized", http.StatusUnauthorized)
-	}
 }
