@@ -1,5 +1,9 @@
 <script setup>
-const props = defineProps(["error"]);
+const props = defineProps({
+	error: {
+		type: Error,
+	},
+});
 </script>
 
 <template>

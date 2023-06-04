@@ -1,4 +1,5 @@
 <script setup>
+import { watch } from "vue";
 import "@/lib/font-awesome.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -7,9 +8,13 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	show: {
+		type: Boolean,
+		default: true,
+	},
 });
 </script>
 
 <template>
-	<FontAwesomeIcon :icon="name" />
+	<FontAwesomeIcon v-if="show" :icon="name" />
 </template>
