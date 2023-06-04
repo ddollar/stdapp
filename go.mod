@@ -10,7 +10,7 @@ require (
 	github.com/ddollar/migrate v1.3.0
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.0.3
-	github.com/ddollar/stdgraph v1.4.0
+	github.com/ddollar/stdgraph v1.5.0
 	github.com/docker/docker v24.0.2+incompatible
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-pg/pg/v10 v10.11.0
@@ -53,7 +53,6 @@ require (
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
 	github.com/daixiang0/gci v0.10.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/ddollar/graphql-go v1.5.0-ddollar2 // indirect
 	github.com/denis-tingaikin/go-header v0.4.3 // indirect
 	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
@@ -97,6 +96,7 @@ require (
 	github.com/gostaticanalysis/comment v1.4.2 // indirect
 	github.com/gostaticanalysis/forcetypeassert v0.1.0 // indirect
 	github.com/gostaticanalysis/nilerr v0.1.1 // indirect
+	github.com/graph-gophers/graphql-go v1.5.1-0.20230420075959-f0f4e10d6a70 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
