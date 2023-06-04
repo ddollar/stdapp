@@ -1,8 +1,9 @@
 package stdapp
 
 import (
+	"archive/zip"
 	"bytes"
-	"embed"
+	_ "embed"
 	"fmt"
 	"io/fs"
 	"io/ioutil"
@@ -14,8 +15,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-//go:embed all:init
-var templateApp embed.FS
+//go:generate zip -r init.zip init
+
+//go:embed init.zip
+var initArchive []byte
 
 func initApp(name string) error {
 	if err := os.Mkdir(name, 0755); err != nil {
@@ -30,7 +33,12 @@ func initApp(name string) error {
 		return errors.Wrap(err, "git init")
 	}
 
-	app, err := fs.Sub(templateApp, "init")
+	zr, err := zip.NewReader(bytes.NewReader(initArchive), int64(len(initArchive)))
+	if err != nil {
+		return err
+	}
+
+	app, err := fs.Sub(zr, "init")
 	if err != nil {
 		return errors.Wrap(err, "chroot")
 	}

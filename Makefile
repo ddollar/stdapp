@@ -3,6 +3,7 @@
 all: build
 
 build:
+	go generate >/dev/null
 	go build -o dist -mod=vendor --ldflags="-s -w" . ./cmd/sa
 
 lint:
