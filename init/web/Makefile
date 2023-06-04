@@ -1,14 +1,14 @@
-.PHONY: all build fa lint test vendor
+.PHONY: all build icons lint test vendor
 
 all: build
 
 build:
 	npx vite build
 
-fa:
+icons:
 	@echo 'import { library } from "@fortawesome/fontawesome-svg-core";' > src/lib/font-awesome.js
-	@find . -name "*.vue" -exec grep "fa-icon" {} \; \
-		| sed -n 's/.*icon="\([^"]*\)".*/\1/p' \
+	@find . -name "*.vue" -exec grep "<Icon" {} \; \
+		| sed -n 's/.*name="\([^"]*\)".*/\1/p' \
 		| sort -u \
 		| awk -F"-" '{for(i=1;i<=NF;i++){$$i=toupper(substr($$i,1,1)) substr($$i,2)}} 1' OFS="" \
 		| while read icon; do \

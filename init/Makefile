@@ -5,7 +5,6 @@ all: build
 build:
 	make -C web build
 	go build -o dist/app -mod=vendor --ldflags="-s -w" .
-	go build -o dist/radiusd -mod=vendor --ldflags="-s -w" ./cmd/radiusd
 
 lint:
 	make -C web lint

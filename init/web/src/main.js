@@ -26,10 +26,6 @@ app.use(timeago, {
 	},
 });
 
-import "@/lib/font-awesome.js";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-app.component("fa-icon", FontAwesomeIcon);
-
 import vSelect from "vue-select";
 app.component("v-select", vSelect);
 

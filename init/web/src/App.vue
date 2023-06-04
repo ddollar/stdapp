@@ -13,8 +13,9 @@ import container from "@/lib/container";
 </template>
 
 <style lang="scss">
-@import "@/styles/bootstrap.scss";
-@import "bootstrap";
-@import "@/styles/theme.scss";
 @import "vue-select/dist/vue-select.css";
+
+@import "@/styles/bootstrap.scss";
+@import "@/styles/stdapp.scss";
+@import "@/styles/app.scss";
 </style>
