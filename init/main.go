@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"example.org/stdapp/api"
+	"example.org/stdapp/api/resolver"
 	"github.com/ddollar/stdapp"
 	"github.com/pkg/errors"
 )
@@ -41,7 +41,7 @@ func app() (*stdapp.App, error) {
 		Database:     os.Getenv("DATABASE_URL"),
 		Migrations:   migrations,
 		Name:         "stdapp-init",
-		Resolver:     api.New,
+		Resolver:     resolver.New,
 		Schema:       schema,
 		Web:          sweb,
 		WriteTimeout: 5 * time.Minute,

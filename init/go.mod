@@ -3,9 +3,9 @@ module example.org/stdapp
 go 1.20
 
 require (
-	github.com/ddollar/stdapp v0.0.0-20230602175546-24a7c7190180
+	github.com/ddollar/stdapp v1.1.2
 	github.com/go-pg/pg/v10 v10.11.0
-	github.com/golangci/golangci-lint v1.53.1
+	github.com/golangci/golangci-lint v1.53.2
 	github.com/goware/modvendor v0.5.0
 	github.com/pkg/errors v0.9.1
 )
@@ -23,6 +23,7 @@ require (
 	github.com/GaijinEntertainment/go-exhaustruct/v2 v2.3.0 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
+	github.com/OpenPeeDeeP/depguard/v2 v2.1.0 // indirect
 	github.com/adrg/xdg v0.4.0 // indirect
 	github.com/alexkohler/nakedret/v2 v2.0.1 // indirect
 	github.com/alexkohler/prealloc v1.0.0 // indirect
@@ -52,7 +53,7 @@ require (
 	github.com/ddollar/migrate v1.3.0 // indirect
 	github.com/ddollar/stdapi v1.0.3 // indirect
 	github.com/ddollar/stdcli v1.0.3 // indirect
-	github.com/ddollar/stdgraph v1.4.0 // indirect
+	github.com/ddollar/stdgraph v1.5.0 // indirect
 	github.com/denis-tingaikin/go-header v0.4.3 // indirect
 	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/docker/docker v24.0.2+incompatible // indirect
@@ -99,6 +100,7 @@ require (
 	github.com/gostaticanalysis/comment v1.4.2 // indirect
 	github.com/gostaticanalysis/forcetypeassert v0.1.0 // indirect
 	github.com/gostaticanalysis/nilerr v0.1.1 // indirect
+	github.com/graph-gophers/graphql-go v1.5.1-0.20230420075959-f0f4e10d6a70 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
@@ -166,7 +168,7 @@ require (
 	github.com/sebest/xff v0.0.0-20210106013422-671bd2870b3a // indirect
 	github.com/securego/gosec/v2 v2.16.0 // indirect
 	github.com/shazow/go-diff v0.0.0-20160112020656-b6b7b6733b8c // indirect
-	github.com/sirupsen/logrus v1.9.2 // indirect
+	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/sivchari/containedctx v1.0.3 // indirect
 	github.com/sivchari/nosnakecase v1.7.0 // indirect
 	github.com/sivchari/tenv v1.7.1 // indirect
