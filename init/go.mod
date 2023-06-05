@@ -3,7 +3,7 @@ module example.org/stdapp
 go 1.20
 
 require (
-	github.com/ddollar/stdapp v1.1.2
+	github.com/ddollar/stdapp v1.1.3
 	github.com/go-pg/pg/v10 v10.11.0
 	github.com/golangci/golangci-lint v1.53.2
 	github.com/goware/modvendor v0.5.0
