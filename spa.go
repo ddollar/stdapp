@@ -19,7 +19,9 @@ func (a *App) spa() (*SPA, error) {
 		server: stdapi.New(a.opts.Name, a.opts.Name),
 	}
 
-	s.server.Router.PathPrefix(a.opts.Prefix).Handler(http.StripPrefix(a.opts.Prefix, http.FileServer(http.FS(s))))
+	h := http.StripPrefix(a.opts.Prefix, http.FileServer(http.FS(s)))
+
+	s.server.Router.PathPrefix(a.opts.Prefix).Handler(a.WithMiddleware(h))
 
 	return s, nil
 

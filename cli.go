@@ -2,6 +2,7 @@ package stdapp
 
 import (
 	"fmt"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"os/exec"
@@ -11,8 +12,10 @@ import (
 
 	"github.com/ddollar/coalesce"
 	"github.com/ddollar/migrate"
+	"github.com/ddollar/stdapi"
 	"github.com/ddollar/stdcli"
 	"github.com/pkg/errors"
+	"golang.org/x/sync/errgroup"
 )
 
 func (a *App) cliApi(ctx *stdcli.Context) error {
@@ -151,7 +154,7 @@ func (a *App) cliPgReset(ctx *stdcli.Context) error {
 
 func (a *App) cliWeb(ctx *stdcli.Context) error {
 	if ctx.Bool("development") {
-		return a.cliWebDevelopment()
+		return a.webDevelopment()
 	}
 
 	s, err := a.spa()
@@ -168,14 +171,51 @@ func (a *App) cliWeb(ctx *stdcli.Context) error {
 	return nil
 }
 
-func (a *App) cliWebDevelopment() error {
+func (a *App) webDevelopment() error {
+	eg := new(errgroup.Group)
+
+	eg.Go(a.webDevelopmentProxy)
+	eg.Go(a.webDevelopmentVite)
+
+	if err := eg.Wait(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *App) webDevelopmentProxy() error {
+	s := stdapi.New(a.opts.Name, a.opts.Name)
+
+	u, err := url.Parse("http://localhost:8001")
+	if err != nil {
+		return err
+	}
+
+	rp := httputil.NewSingleHostReverseProxy(u)
+
+	s.Router.PathPrefix(a.opts.Prefix).Handler(a.WithMiddleware(rp))
+
+	if err := s.Listen("https", ":8000"); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *App) webDevelopmentVite() error {
 	if err := os.Chdir("web"); err != nil {
 		return errors.WithStack(err)
 	}
 
 	cmd := exec.Command("npx", "vite", "--host")
 
-	cmd.Env = append(os.Environ(), fmt.Sprintf("VITE_PREFIX=%s", coalesce.Any(a.opts.Prefix, "/")))
+	cmd.Env = append(os.Environ(),
+		"PORT=8001",
+		fmt.Sprintf("VITE_PREFIX=%s", coalesce.Any(a.opts.Prefix, "/")),
+	)
+
+	fmt.Printf("cmd.Env: %+v\n", cmd.Env)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
