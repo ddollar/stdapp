@@ -7,4 +7,6 @@ $min-contrast-ratio: 3;
 
 $table-striped-bg: #f7f7f7;
 
-@import "node_modules/bootstrap/scss/bootstrap.scss";
+@import "bootstrap";
+
+$gutter: 1rem;
