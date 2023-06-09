@@ -215,8 +215,6 @@ func (a *App) webDevelopmentVite() error {
 		fmt.Sprintf("VITE_PREFIX=%s", coalesce.Any(a.opts.Prefix, "/")),
 	)
 
-	fmt.Printf("cmd.Env: %+v\n", cmd.Env)
-
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
