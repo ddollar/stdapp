@@ -83,7 +83,7 @@ func (a *App) cliDeployment(ctx *stdcli.Context) error {
 		return err
 	}
 
-	cmd := exec.Command("ssh", u.Host, fmt.Sprintf(`cd %s && bash -l -c "sa %s"`, strings.TrimPrefix(u.Path, "/"), strings.Join(ctx.Args, " ")))
+	cmd := exec.Command("ssh", "-t", u.Host, fmt.Sprintf(`cd %s && bash -l -c "sa %s"`, strings.TrimPrefix(u.Path, "/"), strings.Join(ctx.Args, " ")))
 
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
