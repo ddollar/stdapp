@@ -1,6 +1,6 @@
 ## development #################################################################
 
-FROM ghcr.io/ddollar/go:1.20 AS development
+FROM docker.ddollar.dev/go:1.20 AS development
 
 ENV DEVELOPMENT=true
 ENV PORT=8000
@@ -26,7 +26,7 @@ ENTRYPOINT ["go", "run", "."]
 
 ## package #####################################################################
 
-FROM ghcr.io/ddollar/go:1.20 AS package
+FROM docker.ddollar.dev/go:1.20 AS package
 
 ENV CGO_ENABLED=0
 ENV VITE_PREFIX=/
@@ -49,7 +49,7 @@ RUN make build
 
 ## production ##################################################################
 
-FROM ghcr.io/ddollar/scratch AS production
+FROM docker.ddollar.dev/scratch AS production
 
 ENV PATH=/opt/bin:$PATH
 ENV PORT=8000
