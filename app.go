@@ -82,6 +82,8 @@ func (a *App) Run(args []string) int {
 
 	c.Command("pg reset", "reset databaser", a.cliPgReset, stdcli.CommandOptions{})
 
+	c.Command("sleep", "sleep forever", a.cliSleep, stdcli.CommandOptions{})
+
 	c.Command("web", "start web server", a.cliWeb, stdcli.CommandOptions{
 		Flags: []stdcli.Flag{
 			flagDevelopment,

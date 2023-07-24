@@ -6,8 +6,10 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/ddollar/coalesce"
@@ -150,6 +152,13 @@ func (a *App) cliPgImport(ctx *stdcli.Context) error {
 
 func (a *App) cliPgReset(ctx *stdcli.Context) error {
 	return a.run("postgres", "psql", a.opts.Database, "-c", "drop schema public cascade; create schema public;")
+}
+
+func (a *App) cliSleep(ctx *stdcli.Context) error {
+	ch := make(chan os.Signal)
+	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
+	<-ch
+	return nil
 }
 
 func (a *App) cliWeb(ctx *stdcli.Context) error {
