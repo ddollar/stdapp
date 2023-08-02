@@ -48,7 +48,7 @@ func (a *App) graphQL() (*GraphQL, error) {
 			return nil, errors.WithStack(err)
 		}
 
-		h, err := stdgraph.NewHandler(a.opts.Schema, r, gopts...)
+		h, err := stdgraph.NewHandler(r.Schema(), r, gopts...)
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}

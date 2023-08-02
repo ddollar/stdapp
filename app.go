@@ -32,7 +32,6 @@ type Options struct {
 	Name         string
 	Prefix       string
 	Resolver     ResolverFunc
-	Schema       string
 	Web          fs.FS
 	WriteTimeout time.Duration
 }

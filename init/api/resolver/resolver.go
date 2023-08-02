@@ -1,10 +1,15 @@
 package resolver
 
 import (
+	_ "embed"
+
 	"example.org/stdapp/api/models"
 	"github.com/ddollar/stdapp"
 	"github.com/go-pg/pg/v10/orm"
 )
+
+//go:embed schema.graphql
+var schema string
 
 type Resolver struct {
 	models *models.Models
@@ -29,6 +34,10 @@ func (r *Resolver) Mutation() any {
 
 func (r *Resolver) Query() any {
 	return &Query{r: r}
+}
+
+func (r *Resolver) Schema() string {
+	return schema
 }
 
 func (r *Resolver) Subscription() any {

@@ -15,9 +15,6 @@ import (
 //go:embed db/migrate/*.sql
 var migrations embed.FS
 
-//go:embed api/schema.graphql
-var schema string
-
 //go:embed all:web/dist
 var web embed.FS
 
@@ -42,7 +39,6 @@ func app() (*stdapp.App, error) {
 		Migrations:   migrations,
 		Name:         "stdapp-init",
 		Resolver:     resolver.New,
-		Schema:       schema,
 		Web:          sweb,
 		WriteTimeout: 5 * time.Minute,
 	}
