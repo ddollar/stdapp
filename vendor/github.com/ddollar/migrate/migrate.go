@@ -1,6 +1,7 @@
 package migrate
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -8,17 +9,30 @@ import (
 	"github.com/go-pg/pg/v10"
 )
 
-func Run(dburl string, migrations fs.FS) error {
-	opts, err := pg.ParseURL(dburl)
+type Options struct {
+	Dir    string
+	Schema string
+}
+
+func Run(dburl string, migrations fs.FS, opts Options) error {
+	dbopts, err := pg.ParseURL(dburl)
 	if err != nil {
 		return err
 	}
 
-	db := pg.Connect(opts)
+	if opts.Schema != "" {
+		dbopts.OnConnect = func(ctx context.Context, conn *pg.Conn) error {
+			_, err := conn.Exec("SET search_path=?", opts.Schema)
+			return err
+		}
+	}
+
+	db := pg.Connect(dbopts)
 
 	e := &Engine{
-		db: db,
-		fs: migrations,
+		db:  db,
+		dir: opts.Dir,
+		fs:  migrations,
 	}
 
 	if err := e.Initialize(); err != nil {

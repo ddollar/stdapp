@@ -11,6 +11,7 @@ import (
 
 type Engine struct {
 	db         *pg.DB
+	dir        string
 	fs         fs.FS
 	migrations Migrations
 	state      State

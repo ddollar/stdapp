@@ -17,7 +17,13 @@ type Migrations []Migration
 func LoadMigrations(e *Engine) (Migrations, error) {
 	raw := map[string]Migration{}
 
-	err := fs.WalkDir(e.fs, ".", func(path string, d fs.DirEntry, err error) error {
+	root := "."
+
+	if e.dir != "" {
+		root = e.dir
+	}
+
+	err := fs.WalkDir(e.fs, root, func(path string, d fs.DirEntry, err error) error {
 		if d.IsDir() {
 			return nil
 		}
