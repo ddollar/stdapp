@@ -10,7 +10,7 @@ type Resolver struct {
 	models *models.Models
 }
 
-func New(db orm.DB) (stdapp.Resolver, error) {
+func New(db orm.DB, domain string) (stdapp.Resolver, error) {
 	m, err := models.New(db)
 	if err != nil {
 		return nil, err

@@ -109,11 +109,30 @@ func (a *App) cliInit(ctx *stdcli.Context) error {
 }
 
 func (a *App) cliMigrate(ctx *stdcli.Context) error {
-	if a.opts.Compose {
-		return a.run("api", "go", "run", ".", "migrate")
+	args := []string{}
+	dir := filepath.Join("db", "migrate")
+	schema := "public"
+
+	if d := ctx.String("dir"); d != "" {
+		args = append(args, "-d", "dir")
+		dir = d
 	}
 
-	if err := migrate.Run(a.opts.Database, a.opts.Migrations); err != nil {
+	if s := ctx.String("schema"); s != "" {
+		args = append(args, "-s", s)
+		schema = s
+	}
+
+	if a.opts.Compose {
+		return a.run("api", "go", append([]string{"run", ".", "migrate"}, args...)...)
+	}
+
+	mopts := migrate.Options{
+		Dir:    dir,
+		Schema: schema,
+	}
+
+	if err := migrate.Run(a.opts.Database, a.opts.Migrations, mopts); err != nil {
 		return errors.WithStack(err)
 	}
 
@@ -123,7 +142,8 @@ func (a *App) cliMigrate(ctx *stdcli.Context) error {
 func (a *App) cliMigration(ctx *stdcli.Context) error {
 	name := ctx.Arg(0)
 
-	file := filepath.Join("db", "migrate", fmt.Sprintf("%s_%s.sql", time.Now().Format("20060102150405"), name))
+	dir := coalesce.Any(ctx.String("dir"), filepath.Join("db", "migrate"))
+	file := filepath.Join(dir, fmt.Sprintf("%s_%s.sql", time.Now().Format("20060102150405"), name))
 
 	fd, err := os.Create(file)
 	if err != nil {

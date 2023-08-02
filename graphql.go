@@ -1,6 +1,7 @@
 package stdapp
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -25,13 +26,6 @@ func (a *App) graphQL() (*GraphQL, error) {
 
 	opts.PoolSize = 5
 
-	db := pg.Connect(opts)
-
-	r, err := a.opts.Resolver(db)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
 	g := &GraphQL{
 		app:    a,
 		server: stdapi.New("api", a.opts.Name),
@@ -41,12 +35,27 @@ func (a *App) graphQL() (*GraphQL, error) {
 		graphqlws.WithWriteTimeout(coalesce.Any(a.opts.WriteTimeout, 10*time.Second)),
 	}
 
-	h, err := stdgraph.NewHandler(a.opts.Schema, r, gopts...)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
+	for _, domain := range a.domains() {
+		opts.OnConnect = func(ctx context.Context, conn *pg.Conn) error {
+			_, err := conn.Exec("SET search_path=?", domain)
+			return err
+		}
 
-	g.server.Router.PathPrefix(fmt.Sprintf("%s/api/graph", a.opts.Prefix)).Handler(a.WithMiddleware(h))
+		db := pg.Connect(opts)
+
+		r, err := a.opts.Resolver(db, domain)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		h, err := stdgraph.NewHandler(a.opts.Schema, r, gopts...)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		g.server.Router.PathPrefix(fmt.Sprintf("%s/api/%s", a.opts.Prefix, domain)).Handler(a.WithMiddleware(h))
+
+	}
 
 	return g, nil
 }

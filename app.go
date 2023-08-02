@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/ddollar/coalesce"
 	"github.com/ddollar/logger"
 	"github.com/ddollar/stdcli"
 	"github.com/pkg/errors"
@@ -25,6 +26,7 @@ type App struct {
 type Options struct {
 	Compose      bool
 	Database     string
+	Domains      []string
 	Middleware   []Middleware
 	Migrations   fs.FS
 	Name         string
@@ -67,9 +69,17 @@ func (a *App) Run(args []string) int {
 		Validate: stdcli.Args(1),
 	})
 
-	c.Command("migrate", "run migrations", a.cliMigrate, stdcli.CommandOptions{})
+	c.Command("migrate", "run migrations", a.cliMigrate, stdcli.CommandOptions{
+		Flags: []stdcli.Flag{
+			stdcli.StringFlag("dir", "d", "dir of migrations to run"),
+			stdcli.StringFlag("schema", "s", "database schema to run migrations in"),
+		},
+	})
 
 	c.Command("migration", "create a migration", a.cliMigration, stdcli.CommandOptions{
+		Flags: []stdcli.Flag{
+			stdcli.StringFlag("dir", "d", "dir in which to create migration"),
+		},
 		Usage:    "<name>",
 		Validate: stdcli.Args(1),
 	})
@@ -92,6 +102,10 @@ func (a *App) Run(args []string) int {
 	})
 
 	return c.Execute(args)
+}
+
+func (a *App) domains() []string {
+	return coalesce.Any(a.opts.Domains, []string{"public"})
 }
 
 func (a *App) run(container, command string, args ...string) error {
