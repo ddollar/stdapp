@@ -36,8 +36,10 @@ func (a *App) graphQL() (*GraphQL, error) {
 
 		opts.PoolSize = 5
 
+		domainCopy := domain
+
 		opts.OnConnect = func(ctx context.Context, conn *pg.Conn) error {
-			_, err := conn.Exec("SET search_path=?", domain)
+			_, err := conn.Exec("SET search_path=?", domainCopy)
 			return err
 		}
 
