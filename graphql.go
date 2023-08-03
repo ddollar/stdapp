@@ -39,7 +39,7 @@ func (a *App) graphQL() (*GraphQL, error) {
 		domainCopy := domain
 
 		opts.OnConnect = func(ctx context.Context, conn *pg.Conn) error {
-			_, err := conn.Exec("SET search_path=?", domainCopy)
+			_, err := conn.Exec("SET search_path=?,public", domainCopy)
 			return err
 		}
 
