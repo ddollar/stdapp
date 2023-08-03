@@ -114,7 +114,7 @@ func (a *App) cliMigrate(ctx *stdcli.Context) error {
 	schema := "public"
 
 	if d := ctx.String("dir"); d != "" {
-		args = append(args, "-d", "dir")
+		args = append(args, "-d", d)
 		dir = d
 	}
 
