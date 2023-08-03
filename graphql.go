@@ -19,13 +19,6 @@ type GraphQL struct {
 }
 
 func (a *App) graphQL() (*GraphQL, error) {
-	opts, err := pg.ParseURL(a.opts.Database)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	opts.PoolSize = 5
-
 	g := &GraphQL{
 		app:    a,
 		server: stdapi.New("api", a.opts.Name),
@@ -36,6 +29,13 @@ func (a *App) graphQL() (*GraphQL, error) {
 	}
 
 	for _, domain := range a.domains() {
+		opts, err := pg.ParseURL(a.opts.Database)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		opts.PoolSize = 5
+
 		opts.OnConnect = func(ctx context.Context, conn *pg.Conn) error {
 			_, err := conn.Exec("SET search_path=?", domain)
 			return err
