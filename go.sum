@@ -128,8 +128,8 @@ github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2 h1:Lsq95mhfoFeoaRGNnMWux
 github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2/go.mod h1:a47eRjVBKkU3gu/eLnV06s58CFcfSbMRV27t1g0z9z0=
 github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52 h1:OYnMA9hPUciXiWXoYuKXexWh+yfbUYtV+BwKTsm7U5A=
 github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52/go.mod h1:n6+tdoM+N4XRXpS4eENqL2iD6c9rC1XrJ+PjoFiafTU=
-github.com/ddollar/migrate v1.4.0 h1:QQfujdurpDBesumhzpSXrulRocToqTAAs+E1zabGurY=
-github.com/ddollar/migrate v1.4.0/go.mod h1:Yu3XMlyGiiJrZ2x3bFCZoDqLI9vlp4ZynlEsHXZUs9A=
+github.com/ddollar/migrate v1.4.1 h1:U3k6JjBRMM6FwBLXpWjBtHsw3ItmT6GXUqHozBmH+So=
+github.com/ddollar/migrate v1.4.1/go.mod h1:Yu3XMlyGiiJrZ2x3bFCZoDqLI9vlp4ZynlEsHXZUs9A=
 github.com/ddollar/stdapi v1.0.3 h1:/Nsm2UmLh0GB0IUFBL8KXrSOUreW/yAwfyUvJ/CE+nU=
 github.com/ddollar/stdapi v1.0.3/go.mod h1:ck4AfP20jGAgzx0laO7NSvDBh6uKmqYJAWTvcvs4Clc=
 github.com/ddollar/stdcli v1.0.3 h1:YwT8pddVORCQ7vCACjeWHGFIM6ef7zzKiDvfZ0yqb/s=

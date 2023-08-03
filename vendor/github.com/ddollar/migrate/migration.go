@@ -24,7 +24,7 @@ func LoadMigrations(e *Engine) (Migrations, error) {
 	}
 
 	err := fs.WalkDir(e.fs, root, func(path string, d fs.DirEntry, err error) error {
-		if d.IsDir() {
+		if d == nil || d.IsDir() {
 			return nil
 		}
 		parts := strings.SplitN(d.Name(), ".", 2)

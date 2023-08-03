@@ -7,7 +7,7 @@ require (
 	github.com/ddollar/coalesce v1.1.0
 	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
-	github.com/ddollar/migrate v1.4.0
+	github.com/ddollar/migrate v1.4.1
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.0.3
 	github.com/ddollar/stdgraph v1.5.0
