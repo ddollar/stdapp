@@ -54,7 +54,7 @@ require (
 	github.com/ddollar/coalesce v1.1.0 // indirect
 	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2 // indirect
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52 // indirect
-	github.com/ddollar/migrate v1.4.2 // indirect
+	github.com/ddollar/migrate v1.4.3 // indirect
 	github.com/ddollar/stdapi v1.0.3 // indirect
 	github.com/ddollar/stdcli v1.0.3 // indirect
 	github.com/ddollar/stdgraph v1.5.0 // indirect
