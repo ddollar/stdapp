@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/ddollar/stdapp v1.1.5
-	github.com/go-pg/pg/v10 v10.11.0
+	github.com/go-pg/pg/v10 v10.11.1
 	github.com/golangci/golangci-lint v1.53.2
 	github.com/goware/modvendor v0.5.0
 	github.com/pkg/errors v0.9.1
@@ -49,7 +49,7 @@ require (
 	github.com/ddollar/coalesce v1.1.0 // indirect
 	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2 // indirect
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52 // indirect
-	github.com/ddollar/migrate v1.3.0 // indirect
+	github.com/ddollar/migrate v1.4.2 // indirect
 	github.com/ddollar/stdapi v1.0.3 // indirect
 	github.com/ddollar/stdcli v1.0.3 // indirect
 	github.com/ddollar/stdgraph v1.5.0 // indirect
@@ -195,7 +195,7 @@ require (
 	github.com/ultraware/whitespace v0.0.5 // indirect
 	github.com/uudashr/gocognit v1.0.6 // indirect
 	github.com/vmihailenco/bufpool v0.1.11 // indirect
-	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
+	github.com/vmihailenco/msgpack/v5 v5.4.0 // indirect
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xen0n/gosmopolitan v1.2.1 // indirect

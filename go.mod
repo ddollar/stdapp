@@ -7,7 +7,7 @@ require (
 	github.com/ddollar/coalesce v1.1.0
 	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
-	github.com/ddollar/migrate v1.4.1
+	github.com/ddollar/migrate v1.4.2
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.0.3
 	github.com/ddollar/stdgraph v1.5.0
@@ -194,7 +194,7 @@ require (
 	github.com/ultraware/whitespace v0.0.5 // indirect
 	github.com/uudashr/gocognit v1.0.6 // indirect
 	github.com/vmihailenco/bufpool v0.1.11 // indirect
-	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
+	github.com/vmihailenco/msgpack/v5 v5.4.0 // indirect
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/yagipy/maintidx v1.0.0 // indirect
