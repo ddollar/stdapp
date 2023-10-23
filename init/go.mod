@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/ddollar/stdapp v1.1.5
-	github.com/go-pg/pg/v10 v10.11.0
+	github.com/go-pg/pg/v10 v10.11.1
 	github.com/golangci/golangci-lint v1.53.2
 	github.com/goware/modvendor v0.5.0
 	github.com/pkg/errors v0.9.1
@@ -50,7 +50,7 @@ require (
 	github.com/ddollar/graphql-go v1.5.0-ddollar2 // indirect
 	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2 // indirect
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52 // indirect
-	github.com/ddollar/migrate v1.3.0 // indirect
+	github.com/ddollar/migrate v1.4.2 // indirect
 	github.com/ddollar/stdapi v1.0.3 // indirect
 	github.com/ddollar/stdcli v1.0.3 // indirect
 	github.com/ddollar/stdgraph v1.5.0 // indirect
@@ -197,7 +197,7 @@ require (
 	github.com/ultraware/whitespace v0.0.5 // indirect
 	github.com/uudashr/gocognit v1.0.6 // indirect
 	github.com/vmihailenco/bufpool v0.1.11 // indirect
-	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
+	github.com/vmihailenco/msgpack/v5 v5.4.0 // indirect
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xen0n/gosmopolitan v1.2.1 // indirect
@@ -210,15 +210,15 @@ require (
 	go.uber.org/goleak v1.2.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
-	golang.org/x/crypto v0.9.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20230522175609-2e198f4a06a1 // indirect
 	golang.org/x/mod v0.10.0 // indirect
-	golang.org/x/net v0.10.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sync v0.2.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/term v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/term v0.13.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.9.3 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
