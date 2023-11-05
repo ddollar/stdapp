@@ -111,11 +111,17 @@ func (a *App) cliInit(ctx *stdcli.Context) error {
 func (a *App) cliMigrate(ctx *stdcli.Context) error {
 	args := []string{}
 	dir := filepath.Join("db", "migrate")
+	dry := false
 	schema := "public"
 
 	if d := ctx.String("dir"); d != "" {
 		args = append(args, "-d", d)
 		dir = d
+	}
+
+	if ctx.Bool("dry") {
+		args = append(args, "--dry")
+		dry = true
 	}
 
 	if s := ctx.String("schema"); s != "" {
@@ -129,6 +135,7 @@ func (a *App) cliMigrate(ctx *stdcli.Context) error {
 
 	mopts := migrate.Options{
 		Dir:    dir,
+		DryRun: dry,
 		Schema: schema,
 	}
 
