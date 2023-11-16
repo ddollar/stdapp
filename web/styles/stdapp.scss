@@ -1,0 +1,160 @@
+$primary: #0184bf;
+$info: #b3ecff;
+$success: #009900;
+$warning: #ce8c08;
+
+$min-contrast-ratio: 3;
+
+$table-striped-bg: #f7f7f7;
+
+@import "bootstrap";
+
+$gutter: 1rem;
+$color-mode-type: data;
+
+body {
+	background-color: var(--bs-secondary-bg-subtle);
+}
+
+#app {
+	margin-top: 72px;
+}
+
+.card {
+	.card-header {
+		color: $gray-600;
+		font-size: 0.9rem;
+		font-weight: bold;
+	}
+}
+
+table.table {
+	margin-bottom: 0;
+
+	thead {
+		background: #ddd;
+	}
+
+	tbody {
+		background-color: #fff;
+	}
+
+	> :not(:first-child) {
+		border-top: 2px #ddd solid;
+	}
+
+	th,
+	td {
+		white-space: nowrap;
+	}
+
+	th.expand,
+	td.expand {
+		width: 100%;
+	}
+
+	th.wrap,
+	td.wrap {
+		white-space: normal;
+	}
+}
+
+.v-select {
+	background-color: white;
+}
+
+ul.dropdown-menu {
+	li {
+		cursor: pointer;
+	}
+}
+
+a.nav-link {
+	cursor: pointer;
+}
+
+.modal {
+	filter: drop-shadow(8px 8px 12px $gray-600);
+
+	.modal-header,
+	.modal-footer {
+		background-color: $gray-300;
+	}
+}
+
+@include media-breakpoint-down(sm) {
+	table.table {
+		font-size: 0.7rem;
+
+		th,
+		td {
+			padding: 0.3rem 0.5rem;
+		}
+	}
+}
+
+.spin {
+	animation: spin-animation 1.5s infinite;
+	display: inline-block;
+}
+
+@keyframes spin-animation {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(359deg);
+	}
+}
+
+li.nav-item {
+	.icon {
+		display: inline;
+		margin-right: calc($gutter * 0.4);
+		margin-top: -3px;
+	}
+
+	> a {
+		> .icon {
+			@include media-breakpoint-down(lg) {
+				margin-right: 0;
+			}
+		}
+
+		> span {
+			display: none;
+
+			@include media-breakpoint-up(lg) {
+				display: inline-block;
+			}
+		}
+	}
+}
+
+ul.navbar-nav {
+	> li {
+		@extend .nav-item;
+		margin-left: calc($gutter * 0.5);
+
+		@include media-breakpoint-up(lg) {
+			margin-left: calc($gutter * 0.75);
+		}
+
+		> a {
+			@extend .nav-link;
+		}
+
+		> ul.dropdown-menu > li > a {
+			@extend .dropdown-item;
+
+			&.active {
+				background: inherit;
+			}
+		}
+	}
+}
+
+.form-control:focus {
+	background-color: rgb(221, 246, 252);
+	box-shadow: none;
+}
