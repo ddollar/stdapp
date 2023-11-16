@@ -23,6 +23,9 @@ defineProps({
 			<Icon v-if="icon" :name="icon" />
 			<slot />
 		</RouterLink>
-		<a v-else><slot /></a>
+		<a v-else>
+			<Icon v-if="icon" :name="icon" />
+			<slot />
+		</a>
 	</li>
 </template>
