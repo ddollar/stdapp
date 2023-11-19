@@ -16,9 +16,6 @@ import container from "../lib/container";
 <style scoped lang="scss">
 @import "../styles/stdapp";
 
-.avatar {
-	height: 24px;
-}
 
 .navbar {
 	margin-right: calc($gutter * -0.5);
