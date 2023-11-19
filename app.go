@@ -1,6 +1,7 @@
 package stdapp
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"time"
@@ -84,7 +85,11 @@ func (a *App) Run(args []string) int {
 		Validate: stdcli.Args(1),
 	})
 
-	c.Command("pg console", "run database console", a.cliPgConsole, stdcli.CommandOptions{})
+	c.Command("pg console", "run database console", a.cliPgConsole, stdcli.CommandOptions{
+		Flags: []stdcli.Flag{
+			stdcli.StringFlag("schema", "s", "database schema to run migrations in"),
+		},
+	})
 
 	c.Command("pg import", "import contents", a.cliPgImport, stdcli.CommandOptions{})
 
@@ -109,6 +114,10 @@ func (a *App) domains() []string {
 }
 
 func (a *App) run(container, command string, args ...string) error {
+	return a.runEnv(container, nil, command, args...)
+}
+
+func (a *App) runEnv(container string, env map[string]string, command string, args ...string) error {
 	r := RunnerLocal
 
 	if a.opts.Compose {
@@ -117,7 +126,7 @@ func (a *App) run(container, command string, args ...string) error {
 			return errors.WithStack(err)
 		}
 
-		r = RunnerCompose(container, tty)
+		r = RunnerCompose(container, tty, env)
 	}
 
 	cmd := r(command, args...)
@@ -125,6 +134,12 @@ func (a *App) run(container, command string, args ...string) error {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+
+	cmd.Env = os.Environ()
+
+	for k, v := range env {
+		cmd.Env = append(cmd.Env, fmt.Sprintf("%s=%s", k, v))
+	}
 
 	if err := cmd.Run(); err != nil {
 		return errors.WithStack(err)

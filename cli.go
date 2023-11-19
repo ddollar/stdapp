@@ -166,7 +166,13 @@ func (a *App) cliMigration(ctx *stdcli.Context) error {
 }
 
 func (a *App) cliPgConsole(ctx *stdcli.Context) error {
-	return a.run("postgres", "psql", a.opts.Database)
+	schema := coalesce.Any(ctx.String("schema"), "public")
+
+	env := map[string]string{
+		"PGOPTIONS": fmt.Sprintf("--search_path=%s", schema),
+	}
+
+	return a.runEnv("postgres", env, "psql", a.opts.Database)
 }
 
 func (a *App) cliPgExport(ctx *stdcli.Context) error {
