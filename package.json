@@ -3,8 +3,12 @@
 	"version": "0.0.0",
 	"type": "module",
 	"exports": {
+		"./*": {
+			"types": "./web/*.d.ts",
+			"import": "./web/*.ts"
+		},
 		"./components/*.vue": {
-			"types": "./web/components/*.d.ts",
+			"types": "./web/components/*.vue.d.ts",
 			"import": "./web/components/*.vue"
 		},
 		"./styles/*.scss": "./web/styles/*.scss"
