@@ -1,4 +1,4 @@
-export declare function day(date: any): any;
-export declare function firstName(name: any): any;
-export declare function money(amount: any): string;
-export declare function proper(name: any): any;
+export declare function day(date: string | number | Date): string;
+export declare function firstName(name: string): string;
+export declare function money(amount: number | bigint): string;
+export declare function proper(name: string): string;

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Modal } from "bootstrap";
 import ActionButton from "./ActionButton.vue";
 import Alert from "./Alert.vue";
@@ -17,9 +17,9 @@ const props = defineProps({
 	},
 });
 
-const error = ref(null);
-const handler = ref(null);
-const modal = ref(null);
+const error = ref();
+const handler = ref();
+const modal = ref();
 
 const hide = () => {
 	handler.value.hide();

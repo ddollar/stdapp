@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import NavbarDropdown from "./NavbarDropdown.vue";
 import NavbarItem from "./NavbarItem.vue";
 import NavbarRoutes from "./NavbarRoutes.vue";

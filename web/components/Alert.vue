@@ -1,15 +1,21 @@
 <script setup lang="ts">
-defineProps({
-	error: {
-		type: Error,
-		default: null,
-	},
-});
+import { GraphQLError } from "graphql";
+
+interface ApolloError {
+	graphQLErrors: GraphQLError[];
+	extensions: {
+		stacktrace: string[];
+	};
+}
+
+defineProps<{
+	error: Error | ApolloError;
+}>();
 </script>
 
 <template>
-	<div v-if="error?.graphQLErrors">
-		<div v-for="err in error?.graphQLErrors" :key="err" class="alert alert-danger">
+	<div v-if="'graphQLErrors' in error">
+		<div v-for="(err, index) in error?.graphQLErrors" :key="index" class="alert alert-danger">
 			<div class="d-flex">
 				<h6 class="mb-0 flex-grow-1">{{ err.message }}</h6>
 				<a v-if="error.extensions?.stacktrace" style="font-size: 0.8em" data-bs-toggle="modal" href="#stacktrace">

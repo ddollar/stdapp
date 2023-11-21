@@ -1,5 +1,5 @@
-<script setup>
-import container from "../lib/container";
+<script setup lang="ts">
+import container from "../container";
 </script>
 
 <template>
@@ -15,7 +15,6 @@ import container from "../lib/container";
 
 <style scoped lang="scss">
 @import "../styles/stdapp";
-
 
 .navbar {
 	margin-right: calc($gutter * -0.5);

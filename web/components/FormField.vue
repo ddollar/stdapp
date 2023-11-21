@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 
 defineEmits(["update:modelValue"]);
@@ -24,7 +24,7 @@ defineProps({
 	},
 });
 
-const field = ref(null);
+const field = ref();
 </script>
 
 <template>
@@ -41,7 +41,7 @@ const field = ref(null);
 				min="0.01"
 				step="0.01"
 				:value="modelValue"
-				@change="$emit('update:modelValue', $event.target.value)"
+				@change="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
 			/>
 		</div>
 		<div v-else-if="type === 'text'">
@@ -50,7 +50,7 @@ const field = ref(null);
 				class="form-control"
 				:type="type"
 				:value="modelValue"
-				@change="$emit('update:modelValue', $event.target.value)"
+				@change="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
 			/>
 		</div>
 	</div>

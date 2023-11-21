@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
-import { money } from "../lib/format";
+import { money } from "../format";
 
 const props = defineProps({
 	amount: {
