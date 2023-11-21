@@ -4,9 +4,6 @@
 	"exclude": ["node_modules"],
 	"compilerOptions": {
 		"composite": true,
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"]
-		}
+		"baseUrl": "."
 	}
 }
