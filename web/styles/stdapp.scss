@@ -16,8 +16,8 @@ body {
 	background-color: var(--bs-secondary-bg-subtle);
 }
 
-#app {
-	margin-top: 72px;
+main {
+	display: flex;
 }
 
 .card {

@@ -1,0 +1,12 @@
+{
+	"extends": "@vue/tsconfig/tsconfig.dom.json",
+	"include": ["./web/components/*.vue"],
+	"exclude": ["node_modules"],
+	"compilerOptions": {
+		"composite": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	}
+}
