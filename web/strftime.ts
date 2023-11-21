@@ -6,7 +6,7 @@
  * Week number (%V) code based on Taco van den Broek's prototype:
  * http://techblog.procurios.nl/k/news/view/33796/14863/calculate-iso-8601-week-and-year-in-javascript.html
  */
-export function strftime(sFormat, date) {
+export function strftime(format: string, date: Date) {
 	if (!(date instanceof Date)) date = new Date();
 	var nDay = date.getDay(),
 		nDate = date.getDate(),
@@ -37,10 +37,10 @@ export function strftime(sFormat, date) {
 			target.setDate(nDate - ((nDay + 6) % 7) + 3);
 			return target;
 		},
-		zeroPad = function (nNum, nPad) {
+		zeroPad = function (nNum: number, nPad: number) {
 			return (Math.pow(10, nPad) + nNum + "").slice(1);
 		};
-	return sFormat.replace(/%[a-z]/gi, function (sMatch) {
+	return format.replace(/%[a-z]/gi, function (sMatch) {
 		return (
 			({
 				"%a": aDays[nDay].slice(0, 3),
@@ -73,7 +73,7 @@ export function strftime(sFormat, date) {
 					target.setMonth(0, 1);
 					var nJan1 = target.getDay();
 					if (nJan1 !== 4) target.setMonth(0, 1 + ((4 - nJan1 + 7) % 7));
-					return zeroPad(1 + Math.ceil((n1stThu - target) / 604800000), 2);
+					return zeroPad(1 + Math.ceil((n1stThu - target.getTime()) / 604800000), 2);
 				})(),
 				"%w": nDay,
 				"%x": date.toLocaleDateString(),
