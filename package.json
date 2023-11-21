@@ -4,11 +4,11 @@
 	"type": "module",
 	"exports": {
 		"./*": {
-			"types": "./web/*.d.ts",
+			"types": "./web/types/web/*.d.ts",
 			"import": "./web/*.ts"
 		},
 		"./components/*.vue": {
-			"types": "./web/components/*.vue.d.ts",
+			"types": "./web/types/web/components/*.vue.d.ts",
 			"import": "./web/components/*.vue"
 		},
 		"./styles/*.scss": "./web/styles/*.scss"

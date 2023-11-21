@@ -3,7 +3,8 @@
 	"include": ["./web/**/*.ts", "./web/**/*.vue"],
 	"exclude": ["node_modules"],
 	"compilerOptions": {
+		"baseUrl": "web",
 		"composite": true,
-		"baseUrl": "."
+		"declarationDir": "./web/types"
 	}
 }
