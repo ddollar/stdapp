@@ -1,12 +1,8 @@
 {
 	"name": "stdapp",
 	"version": "0.0.0",
+	"type": "module",
 	"exports": {
-		"./*": {
-			"types": "./web/*.d.ts",
-			"import": "./web/*.ts"
-		},
-		"./*.js": "./web/*.js",
 		"./components/*.vue": {
 			"types": "./web/components/*.d.ts",
 			"import": "./web/components/*.vue"
