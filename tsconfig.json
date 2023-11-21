@@ -1,6 +1,6 @@
 {
 	"extends": "@vue/tsconfig/tsconfig.dom.json",
-	"include": ["./web/components/*.vue"],
+	"include": ["./web/**/*.ts", "./web/**/*.vue"],
 	"exclude": ["node_modules"],
 	"compilerOptions": {
 		"composite": true,

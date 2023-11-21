@@ -2,16 +2,23 @@
 	"name": "stdapp",
 	"version": "0.0.0",
 	"exports": {
-		"./components/*.vue": "./web/components/*.vue",
-		"./styles/*.scss": "./web/styles/*.scss",
-		"./*": "./web/lib/*.js"
+		"./*": {
+			"types": "./web/*.d.ts",
+			"import": "./web/*.ts"
+		},
+		"./*.js": "./web/*.js",
+		"./components/*.vue": {
+			"types": "./web/components/*.d.ts",
+			"import": "./web/components/*.vue"
+		},
+		"./styles/*.scss": "./web/styles/*.scss"
 	},
 	"files": [
 		"web/**/*"
 	],
 	"types": "web/index.d.ts",
 	"scripts": {
-		"build": "vue-tsc --emitDeclarationOnly --outfile web/index.d.ts"
+		"build": "vue-tsc --emitDeclarationOnly"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-svg-core": "^6.1.1",
