@@ -159,7 +159,7 @@ github.com/ddollar/graphql-transport-ws/graphqlws/internal/connection
 # github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
 ## explicit
 github.com/ddollar/logger
-# github.com/ddollar/migrate v1.5.0
+# github.com/ddollar/migrate v1.5.1
 ## explicit; go 1.18
 github.com/ddollar/migrate
 # github.com/ddollar/stdapi v1.0.3

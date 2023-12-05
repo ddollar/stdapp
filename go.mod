@@ -7,7 +7,7 @@ require (
 	github.com/ddollar/coalesce v1.1.0
 	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
-	github.com/ddollar/migrate v1.5.0
+	github.com/ddollar/migrate v1.5.1
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.0.3
 	github.com/ddollar/stdgraph v1.5.0
@@ -227,7 +227,7 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gotest.tools/v3 v3.0.3 // indirect
+	gotest.tools/v3 v3.1.0 // indirect
 	honnef.co/go/tools v0.4.6 // indirect
 	mellium.im/sasl v0.3.1 // indirect
 	mvdan.cc/gofumpt v0.5.0 // indirect

@@ -147,8 +147,8 @@ github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2 h1:Lsq95mhfoFeoaRGNnMWux
 github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2/go.mod h1:a47eRjVBKkU3gu/eLnV06s58CFcfSbMRV27t1g0z9z0=
 github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52 h1:OYnMA9hPUciXiWXoYuKXexWh+yfbUYtV+BwKTsm7U5A=
 github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52/go.mod h1:n6+tdoM+N4XRXpS4eENqL2iD6c9rC1XrJ+PjoFiafTU=
-github.com/ddollar/migrate v1.5.0 h1:vJ465cnwOPZ1fWB9Fr0MLyxXdCCYsR+hj5Mrj6xobsU=
-github.com/ddollar/migrate v1.5.0/go.mod h1:tFTmilOAWpUAmpto0k8jovT0u0+MTL3rY6oizVAozg8=
+github.com/ddollar/migrate v1.5.1 h1:wpc+twJetJjjIPjTp642l2Rtn0R/an2RArRLJ7wPcQs=
+github.com/ddollar/migrate v1.5.1/go.mod h1:A4ZdjBOFk3ZZRLkw301cMRRKYzZWS4fpwY5GqNG/WaQ=
 github.com/ddollar/stdapi v1.0.3 h1:/Nsm2UmLh0GB0IUFBL8KXrSOUreW/yAwfyUvJ/CE+nU=
 github.com/ddollar/stdapi v1.0.3/go.mod h1:ck4AfP20jGAgzx0laO7NSvDBh6uKmqYJAWTvcvs4Clc=
 github.com/ddollar/stdcli v1.0.3 h1:YwT8pddVORCQ7vCACjeWHGFIM6ef7zzKiDvfZ0yqb/s=
@@ -1088,8 +1088,7 @@ gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 gotest.tools/v3 v3.0.2/go.mod h1:3SzNCllyD9/Y+b5r9JIKQ474KzkZyqLqEfYqMsX94Bk=
-gotest.tools/v3 v3.0.3 h1:4AuOwCGf4lLR9u3YOe2awrHygurzhO/HeQ6laiA6Sx0=
-gotest.tools/v3 v3.0.3/go.mod h1:Z7Lb0S5l+klDB31fvDQX8ss/FlKDxtlFlw3Oa8Ymbl8=
+gotest.tools/v3 v3.1.0 h1:rVV8Tcg/8jHUkPUorwjaMTtemIMVXfIPKiOqnhEhakk=
 honnef.co/go/tools v0.0.0-20190102054323-c2f93a96b099/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=
 honnef.co/go/tools v0.0.0-20190106161140-3f1c8253044a/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=
 honnef.co/go/tools v0.0.0-20190418001031-e561f6794a2a/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=
