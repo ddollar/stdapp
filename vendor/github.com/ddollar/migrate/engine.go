@@ -2,16 +2,16 @@ package migrate
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"io/fs"
 	"sort"
-
-	"github.com/go-pg/pg/v10"
 )
 
 type Engine struct {
-	db         *pg.DB
+	db         *sql.DB
 	dir        string
+	dryrun     bool
 	fs         fs.FS
 	migrations Migrations
 	state      State
@@ -39,23 +39,30 @@ func (e *Engine) Initialize() error {
 	return nil
 }
 
-func (e *Engine) Migrate(version string) error {
+func (e *Engine) Migrate(ctx context.Context, version string) error {
 	m, ok := e.migrations.Find(version)
 	if !ok {
 		return fmt.Errorf("no such migration: %s", version)
 	}
 
-	return e.db.RunInTransaction(context.Background(), func(tx *pg.Tx) error {
-		if _, err := tx.Exec("insert into _migrations values (?)", version); err != nil {
-			return err
-		}
+	tx, err := e.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
 
-		if _, err := tx.Exec(string(m.Body)); err != nil {
-			return err
-		}
+	if _, err := tx.Exec("insert into _migrations values (?)", version); err != nil {
+		return err
+	}
 
-		return nil
-	})
+	if _, err := tx.Exec(string(m.Body)); err != nil {
+		return err
+	}
+
+	if e.dryrun {
+		return tx.Rollback()
+	}
+
+	return tx.Commit()
 }
 
 func (e *Engine) Pending() ([]string, error) {

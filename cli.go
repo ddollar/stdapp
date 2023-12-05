@@ -1,6 +1,7 @@
 package stdapp
 
 import (
+	"context"
 	"fmt"
 	"net/http/httputil"
 	"net/url"
@@ -133,13 +134,21 @@ func (a *App) cliMigrate(ctx *stdcli.Context) error {
 		return a.run("api", "go", append([]string{"run", ".", "migrate"}, args...)...)
 	}
 
+	u, err := url.Parse(a.opts.Database)
+	if err != nil {
+		return err
+	}
+
+	q := u.Query()
+	q.Set("search_path", schema)
+	u.RawQuery = q.Encode()
+
 	mopts := migrate.Options{
 		Dir:    dir,
 		DryRun: dry,
-		Schema: schema,
 	}
 
-	if err := migrate.Run(a.opts.Database, a.opts.Migrations, mopts); err != nil {
+	if err := migrate.Run(context.Background(), u.String(), a.opts.Migrations, mopts); err != nil {
 		return errors.WithStack(err)
 	}
 

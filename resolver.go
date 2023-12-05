@@ -1,8 +1,8 @@
 package stdapp
 
-import "github.com/go-pg/pg/v10/orm"
+import "github.com/uptrace/bun"
 
-type ResolverFunc func(db orm.DB, domain string) (Resolver, error)
+type ResolverFunc func(db *bun.DB, domain string) (Resolver, error)
 
 type Resolver interface {
 	Mutation() any

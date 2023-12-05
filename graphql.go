@@ -1,7 +1,7 @@
 package stdapp
 
 import (
-	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -9,8 +9,10 @@ import (
 	"github.com/ddollar/graphql-transport-ws/graphqlws"
 	"github.com/ddollar/stdapi"
 	"github.com/ddollar/stdgraph"
-	"github.com/go-pg/pg/v10"
 	"github.com/pkg/errors"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
 )
 
 type GraphQL struct {
@@ -29,21 +31,14 @@ func (a *App) graphQL() (*GraphQL, error) {
 	}
 
 	for _, domain := range a.domains() {
-		opts, err := pg.ParseURL(a.opts.Database)
-		if err != nil {
-			return nil, errors.WithStack(err)
-		}
+		sdb := sql.OpenDB(pgdriver.NewConnector(
+			pgdriver.WithDSN(a.opts.Database),
+			pgdriver.WithConnParams(map[string]interface{}{
+				"search_path": domain,
+			}),
+		))
 
-		opts.PoolSize = 5
-
-		domainCopy := domain
-
-		opts.OnConnect = func(ctx context.Context, conn *pg.Conn) error {
-			_, err := conn.Exec("SET search_path=?,public", domainCopy)
-			return err
-		}
-
-		db := pg.Connect(opts)
+		db := bun.NewDB(sdb, pgdialect.New())
 
 		r, err := a.opts.Resolver(db, domain)
 		if err != nil {
