@@ -259,7 +259,16 @@ func (a *App) webDevelopmentVite() error {
 		return errors.WithStack(err)
 	}
 
-	cmd := exec.Command("npx", "vite", "--host")
+	cmd := exec.Command("npm", "install")
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		return errors.WithStack(err)
+	}
+
+	cmd = exec.Command("npx", "vite", "--host")
 
 	cmd.Env = append(os.Environ(),
 		"PORT=8001",
