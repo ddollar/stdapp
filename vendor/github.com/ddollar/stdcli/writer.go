@@ -5,6 +5,8 @@ import (
 	"io"
 	"os"
 	"regexp"
+
+	"github.com/pkg/errors"
 )
 
 var (
@@ -22,7 +24,7 @@ type Writer struct {
 
 func init() {
 	DefaultWriter = &Writer{
-		Color:  IsTerminal(os.Stdout),
+		Color:  isTerminal(os.Stdout),
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 		Tags: map[string]Renderer{
@@ -46,12 +48,12 @@ func (w *Writer) Error(err error) error {
 }
 
 func (w *Writer) Errorf(format string, args ...interface{}) error {
-	return w.Error(fmt.Errorf(format, args...))
+	return w.Error(errors.Errorf(format, args...))
 }
 
 func (w *Writer) IsTerminal() bool {
 	if f, ok := w.Stdout.(*os.File); ok {
-		return IsTerminal(f)
+		return isTerminal(f)
 	}
 
 	return false
@@ -62,11 +64,21 @@ func (w *Writer) Sprintf(format string, args ...interface{}) string {
 }
 
 func (w *Writer) Write(data []byte) (int, error) {
-	return w.Stdout.Write([]byte(w.renderTags(string(data))))
+	n, err := w.Stdout.Write([]byte(w.renderTags(string(data))))
+	if err != nil {
+		return 0, errors.WithStack(err)
+	}
+
+	return n, nil
 }
 
 func (w *Writer) Writef(format string, args ...interface{}) (int, error) {
-	return fmt.Fprintf(w.Stdout, w.renderTags(format), args...)
+	n, err := fmt.Fprintf(w.Stdout, w.renderTags(format), args...)
+	if err != nil {
+		return 0, errors.WithStack(err)
+	}
+
+	return n, nil
 }
 
 func (w *Writer) renderTags(s string) string {

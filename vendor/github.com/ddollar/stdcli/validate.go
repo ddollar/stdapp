@@ -2,25 +2,27 @@ package stdcli
 
 import (
 	"fmt"
+
+	"github.com/pkg/errors"
 )
 
-type Validator func(c *Context) error
+type Validator func(ctx Context) error
 
 func Args(num int) Validator {
-	return func(c *Context) error {
-		if len(c.Args) != num {
-			return fmt.Errorf("%d %s required", num, plural("arg", num))
+	return func(ctx Context) error {
+		if len(ctx.Args()) != num {
+			return errors.Errorf("%d %s required", num, plural("arg", num))
 		}
 		return nil
 	}
 }
 
 func ArgsBetween(min, max int) Validator {
-	return func(c *Context) error {
-		if err := ArgsMin(min)(c); err != nil {
+	return func(ctx Context) error {
+		if err := ArgsMin(min)(ctx); err != nil {
 			return err
 		}
-		if err := ArgsMax(max)(c); err != nil {
+		if err := ArgsMax(max)(ctx); err != nil {
 			return err
 		}
 		return nil
@@ -28,18 +30,18 @@ func ArgsBetween(min, max int) Validator {
 }
 
 func ArgsMin(min int) Validator {
-	return func(c *Context) error {
-		if len(c.Args) < min {
-			return fmt.Errorf("at least %d %s required", min, plural("arg", min))
+	return func(ctx Context) error {
+		if len(ctx.Args()) < min {
+			return errors.Errorf("at least %d %s required", min, plural("arg", min))
 		}
 		return nil
 	}
 }
 
 func ArgsMax(max int) Validator {
-	return func(c *Context) error {
-		if len(c.Args) > max {
-			return fmt.Errorf("no more than %d %s expected", max, plural("arg", max))
+	return func(ctx Context) error {
+		if len(ctx.Args()) > max {
+			return errors.Errorf("no more than %d %s expected", max, plural("arg", max))
 		}
 		return nil
 	}

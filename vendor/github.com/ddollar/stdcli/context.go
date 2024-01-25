@@ -3,256 +3,135 @@ package stdcli
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
-	"reflect"
-	"strings"
-	"time"
 
-	"golang.org/x/crypto/ssh/terminal"
+	"github.com/pkg/errors"
+	"golang.org/x/term"
 )
 
-type Context struct {
+type Context interface {
+	context.Context
+	io.ReadWriter
+
+	Arg(i int) string
+	Args() []string
+	Execute(cmd string, args ...string) ([]byte, error)
+	Flags() Flags
+	InfoWriter() InfoWriter
+	IsTerminal() bool
+	ReadSecret() (string, error)
+	Run(cmd string, args ...string) error
+	Terminal(cmd string, args ...string) error
+	Version() string
+	Writef(format string, args ...any)
+}
+
+type defaultContext struct {
 	context.Context
 
-	Args  []string
-	Flags []*Flag
-
+	args   []string
 	engine *Engine
+	flags  Flags
 }
 
-func (c *Context) Execute(cmd string, args ...string) ([]byte, error) {
-	if c.engine.Executor == nil {
-		return nil, fmt.Errorf("no executor")
-	}
+var _ Context = &defaultContext{}
 
-	return c.engine.Executor.Execute(cmd, args...)
-}
-
-func (c *Context) Run(cmd string, args ...string) error {
-	if c.engine.Executor == nil {
-		return fmt.Errorf("no executor")
-	}
-
-	return c.engine.Executor.Run(c, cmd, args...)
-}
-
-func (c *Context) Terminal(cmd string, args ...string) error {
-	if c.engine.Executor == nil {
-		return fmt.Errorf("no executor")
-	}
-
-	return c.engine.Executor.Terminal(cmd, args...)
-}
-
-func (c *Context) Version() string {
-	return c.engine.Version
-}
-
-func (c *Context) Arg(i int) string {
-	if i < len(c.Args) {
-		return c.Args[i]
+func (c *defaultContext) Arg(i int) string {
+	if i < len(c.args) {
+		return c.args[i]
 	}
 
 	return ""
 }
 
-func (c *Context) Flag(name string) *Flag {
-	for _, f := range c.Flags {
-		if f.Name == name {
-			return f
-		}
+func (c *defaultContext) Args() []string {
+	return []string(c.args)
+}
+
+func (c *defaultContext) Engine() *Engine {
+	return c.engine
+}
+
+func (c *defaultContext) Execute(cmd string, args ...string) ([]byte, error) {
+	if c.engine.Executor == nil {
+		return nil, errors.Errorf("no executor")
 	}
-	return nil
-}
 
-func (c *Context) Bool(name string) bool {
-	if f := c.Flag(name); f != nil && f.Type() == "bool" {
-		switch t := f.Value.(type) {
-		case nil:
-			v, _ := f.Default.(bool)
-			return v
-		case bool:
-			return t
-		}
-	}
-	return false
-}
-
-func (c *Context) Int(name string) int {
-	if f := c.Flag(name); f != nil && f.Type() == "int" {
-		switch t := f.Value.(type) {
-		case nil:
-			v, _ := f.Default.(int)
-			return v
-		case int:
-			return t
-		}
-	}
-	return 0
-}
-
-func (c *Context) String(name string) string {
-	if f := c.Flag(name); f != nil && f.Type() == "string" {
-		switch t := f.Value.(type) {
-		case nil:
-			v, _ := f.Default.(string)
-			return v
-		case string:
-			return t
-		}
-	}
-	return ""
-}
-
-func (c *Context) Value(name string) interface{} {
-	if f := c.Flag(name); f != nil {
-		return f.Value
-	}
-	return nil
-}
-
-func (c *Context) Info() *Info {
-	return &Info{Context: c}
-}
-
-func (c *Context) ReadSecret() (string, error) {
-	data, err := terminal.ReadPassword(int(os.Stdin.Fd()))
+	data, err := c.engine.Executor.Execute(c, cmd, args...)
 	if err != nil {
-		return "", err
+		return nil, errors.WithStack(err)
+	}
+
+	return data, nil
+}
+
+func (c *defaultContext) Flags() Flags {
+	return c.flags
+}
+
+func (c *defaultContext) InfoWriter() InfoWriter {
+	return &infoWriter{ctx: c}
+}
+
+func (c *defaultContext) IsTerminal() bool {
+	return c.engine.Reader.IsTerminal()
+}
+
+func (c *defaultContext) Read(data []byte) (int, error) {
+	n, err := c.engine.Reader.Read(data)
+	if err != nil {
+		return 0, errors.WithStack(err)
+	}
+
+	return n, nil
+}
+
+func (c *defaultContext) ReadSecret() (string, error) {
+	data, err := term.ReadPassword(int(os.Stdin.Fd()))
+	if err != nil {
+		return "", errors.WithStack(err)
 	}
 
 	return string(data), nil
 }
 
-func (c *Context) TerminalRaw() func() {
-	fn := c.Reader().TerminalRaw()
-	return func() {
-		if fn() {
-			c.Writef("\r")
-		}
-	}
-}
-
-func (c *Context) TerminalSize() (int, int, error) {
-	return terminal.GetSize(int(os.Stdout.Fd()))
-}
-
-func (c *Context) Fail(err error) {
-	if err != nil {
-		c.Writer().Error(err)
-		os.Exit(1)
-	}
-}
-
-func (c *Context) Read(data []byte) (int, error) {
-	return c.Reader().Read(data)
-}
-
-func (c *Context) Reader() *Reader {
-	return c.engine.Reader
-}
-
-func (c *Context) LocalSetting(name string) string {
-	return c.engine.LocalSetting(name)
-}
-
-func (c *Context) SettingDelete(name string) error {
-	return c.engine.SettingDelete(name)
-}
-
-func (c *Context) SettingDirectory(name string) (string, error) {
-	return c.engine.SettingDirectory(name)
-}
-
-func (c *Context) SettingRead(name string) (string, error) {
-	return c.engine.SettingRead(name)
-}
-
-func (c *Context) SettingReadKey(name, key string) (string, error) {
-	return c.engine.SettingReadKey(name, key)
-}
-
-func (c *Context) SettingWrite(name, value string) error {
-	return c.engine.SettingWrite(name, value)
-}
-
-func (c *Context) SettingWriteKey(name, key, value string) error {
-	return c.engine.SettingWriteKey(name, key, value)
-}
-
-func (c *Context) Table(columns ...string) *Table {
-	return &Table{Columns: columns, Context: c}
-}
-
-func (c *Context) Write(data []byte) (int, error) {
-	return c.Writer().Write(data)
-}
-
-func (c *Context) Writer() *Writer {
-	return c.engine.Writer
-}
-
-func (c *Context) OK(id ...string) error {
-	c.Writer().Writef("<ok>OK</ok>")
-
-	if len(id) > 0 {
-		c.Writer().Writef(", <id>%s</id>", strings.Join(id, " "))
+func (c *defaultContext) Run(cmd string, args ...string) error {
+	if c.engine.Executor == nil {
+		return errors.Errorf("no executor")
 	}
 
-	c.Writer().Writef("\n")
+	if err := c.engine.Executor.Run(c, c, cmd, args...); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (c *defaultContext) Terminal(cmd string, args ...string) error {
+	if c.engine.Executor == nil {
+		return errors.Errorf("no executor")
+	}
+
+	if err := c.engine.Executor.Terminal(c, cmd, args...); err != nil {
+		return errors.WithStack(err)
+	}
 
 	return nil
 }
 
-func (c *Context) Startf(format string, args ...interface{}) {
-	c.Writer().Writef(fmt.Sprintf("%s: ", format), args...)
+func (c *defaultContext) Version() string {
+	return c.engine.Version
 }
 
-func (c *Context) Writef(format string, args ...interface{}) error {
-	_, err := c.Writer().Writef(format, args...)
-	return err
+func (c *defaultContext) Write(data []byte) (int, error) {
+	return c.engine.Writer.Write(data)
 }
 
-func (c *Context) Error(err error) error {
-	return c.Writer().Error(err)
+func (c *defaultContext) Writef(format string, args ...any) {
+	c.engine.Writer.Write([]byte(fmt.Sprintf(format, args...))) //nolint:errcheck
 }
 
-func (c *Context) Errorf(format string, args ...interface{}) error {
-	return c.Writer().Errorf(format, args...)
-}
-
-func (c *Context) Options(opts interface{}) error {
-	v := reflect.ValueOf(opts).Elem()
-	t := v.Type()
-
-	for i := 0; i < t.NumField(); i++ {
-		f := t.Field(i)
-		u := v.Field(i)
-
-		if n := f.Tag.Get("flag"); n != "" {
-			name := strings.Split(n, ",")[0]
-			switch typeString(f.Type.Elem()) {
-			case "bool":
-				if x, ok := c.Value(name).(bool); ok {
-					u.Set(reflect.ValueOf(&x))
-				}
-			case "duration":
-				if x, ok := c.Value(name).(time.Duration); ok {
-					u.Set(reflect.ValueOf(&x))
-				}
-			case "int":
-				if x, ok := c.Value(name).(int); ok {
-					u.Set(reflect.ValueOf(&x))
-				}
-			case "string":
-				if x, ok := c.Value(name).(string); ok {
-					u.Set(reflect.ValueOf(&x))
-				}
-			default:
-				return fmt.Errorf("unknown flag type: %s", f.Type.Elem().Kind())
-			}
-		}
-	}
-
-	return nil
+func (c *defaultContext) TableWriter(columns ...string) TableWriter {
+	return &tableWriter{ctx: c, columns: columns}
 }

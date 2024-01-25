@@ -1,39 +1,54 @@
 package stdcli
 
 import (
+	"context"
 	"io"
 	"os"
 	"os/exec"
+
+	"github.com/pkg/errors"
 )
 
 type Executor interface {
-	Execute(cmd string, args ...string) ([]byte, error)
-	Run(w io.Writer, cmd string, args ...string) error
-	Terminal(cmd string, args ...string) error
+	Execute(ctx context.Context, cmd string, args ...string) ([]byte, error)
+	Run(ctx context.Context, w io.Writer, cmd string, args ...string) error
+	Terminal(ctx context.Context, cmd string, args ...string) error
 }
 
-type CmdExecutor struct {
+type defaultExecutor struct{}
+
+func (e *defaultExecutor) Execute(ctx context.Context, cmd string, args ...string) ([]byte, error) {
+	data, err := exec.CommandContext(ctx, cmd, args...).CombinedOutput()
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return data, nil
 }
 
-func (e *CmdExecutor) Execute(cmd string, args ...string) ([]byte, error) {
-	return exec.Command(cmd, args...).CombinedOutput()
-}
-
-func (e *CmdExecutor) Run(w io.Writer, cmd string, args ...string) error {
-	c := exec.Command(cmd, args...)
+func (e *defaultExecutor) Run(ctx context.Context, w io.Writer, cmd string, args ...string) error {
+	c := exec.CommandContext(ctx, cmd, args...)
 
 	c.Stdout = w
 	c.Stderr = w
 
-	return c.Run()
+	if err := c.Run(); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
 }
 
-func (e *CmdExecutor) Terminal(cmd string, args ...string) error {
-	c := exec.Command(cmd, args...)
+func (e *defaultExecutor) Terminal(ctx context.Context, cmd string, args ...string) error {
+	c := exec.CommandContext(ctx, cmd, args...)
 
 	c.Stdin = os.Stdin
 	c.Stdout = os.Stdout
 	c.Stderr = os.Stderr
 
-	return c.Run()
+	if err := c.Run(); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
 }

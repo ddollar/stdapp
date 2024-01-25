@@ -1,0 +1,41 @@
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+linters:
+  enable:
+    - forbidigo
+    - gomodguard
+    - wrapcheck
+
+linters-settings:
+  errcheck:
+    exclude-functions:
+      - (*github.com/ddollar/logger.Logger).Error
+      - (*github.com/ddollar/logger.Logger).Success
+      - (*github.com/ddollar/logger.Logger).Successf
+  exhaustruct:
+    ignore:
+      - sync.Mutex
+  forbidigo:
+    forbid:
+      - '^fmt\.Print.*$'
+      - '^fmt\.Errorf.*$'
+      - "^os.Getenv.*$"
+  gomodguard:
+    blocked:
+      local_replace_directives: true
+      modules:
+        - errors:
+            recommendations: github.com/pkg/errors
+        - golang.org/x/xerrors:
+            recommendations: github.com/pkg/errors
+  wrapcheck:
+    ignorePackageGlobs:
+    ignoreSigs:
+      - errors.Errorf(
+      - errors.New(
+      - errors.WithStack(
+      - (*github.com/ddollar/logger.Logger).Success
+      - (*github.com/ddollar/logger.Logger).Successf
+
