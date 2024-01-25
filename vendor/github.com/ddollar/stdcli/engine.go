@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"runtime/pprof"
+	"os/signal"
 	"strings"
 )
 
@@ -12,7 +12,6 @@ type Engine struct {
 	Commands []Command
 	Executor Executor
 	Name     string
-	Profile  string
 	Reader   *Reader
 	Settings string
 	Version  string
@@ -33,24 +32,20 @@ func (e *Engine) Command(command, description string, fn HandlerFunc, opts Comma
 }
 
 func (e *Engine) Execute(args []string) int {
-	if e.Profile != "" {
-		f, err := os.Create(e.Profile)
-		if err != nil {
-			panic(fmt.Sprintf("could not create profile: %s", e.Profile))
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
-
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+
+	defer stop(c, cancel)
+	go wait(ctx, c, cancel)
 
 	return e.ExecuteContext(ctx, args)
 }
 
 func (e *Engine) ExecuteContext(ctx context.Context, args []string) int {
 	if len(args) > 0 && (args[0] == "-v" || args[0] == "--version") {
-		fmt.Println(e.Version)
+		fmt.Println(e.Version) // nolint:forbidigo
 		return 0
 	}
 
@@ -78,9 +73,20 @@ func (e *Engine) ExecuteContext(ctx context.Context, args []string) int {
 	case ExitCoder:
 		return t.Code()
 	default:
-		e.Writer.Errorf("%s", t)
+		e.Writer.Errorf("%s", t) // nolint:errcheck
 		return 1
 	}
+}
 
-	return 0
+func stop(c chan<- os.Signal, cancel func()) {
+	signal.Stop(c)
+	cancel()
+}
+
+func wait(ctx context.Context, c <-chan os.Signal, cancel func()) {
+	select {
+	case <-c:
+		cancel()
+	case <-ctx.Done():
+	}
 }

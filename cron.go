@@ -23,11 +23,11 @@ var cronEntryMatchers = []*regexp.Regexp{
 }
 
 type Cron struct {
-	ctx    *stdcli.Context
+	ctx    stdcli.Context
 	docker *docker.Client
 }
 
-func NewCron(ctx *stdcli.Context) (*Cron, error) {
+func NewCron(ctx stdcli.Context) (*Cron, error) {
 	dc, err := dockerClient()
 	if err != nil {
 		return nil, err

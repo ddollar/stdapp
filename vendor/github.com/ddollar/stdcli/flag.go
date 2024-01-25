@@ -6,17 +6,21 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 type Flag struct {
-	Default     interface{}
+	Default     any
 	Description string
 	Name        string
 	Short       string
-	Value       interface{}
+	Value       any
 
 	kind string
 }
+
+type Flags []*Flag
 
 func BoolFlag(name, short, description string) Flag {
 	return Flag{
@@ -61,19 +65,19 @@ func (f *Flag) Set(v string) error {
 	case "duration":
 		d, err := time.ParseDuration(v)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 		f.Value = d
 	case "int":
 		i, err := strconv.Atoi(v)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 		f.Value = i
 	case "string":
 		f.Value = v
 	default:
-		return fmt.Errorf("unknown flag type: %s", f.Type())
+		return errors.Errorf("unknown flag type: %s", f.Type())
 	}
 
 	return nil
@@ -110,7 +114,68 @@ func (f *Flag) UsageShort() string {
 	return f.Usage(fmt.Sprintf("-%s", f.Short))
 }
 
-func OptionFlags(opts interface{}) []Flag {
+func (fs Flags) Bool(name string) bool {
+	if f, ok := fs.find(name, "bool"); ok {
+		switch t := f.Value.(type) {
+		case nil:
+			v, _ := f.Default.(bool)
+			return v
+		case bool:
+			return t
+		}
+	}
+
+	return false
+}
+
+func (fs Flags) Int(name string) int {
+	if f, ok := fs.find(name, "int"); ok {
+		switch t := f.Value.(type) {
+		case nil:
+			v, _ := f.Default.(int)
+			return v
+		case int:
+			return t
+		}
+	}
+
+	return 0
+}
+
+func (fs Flags) String(name string) string {
+	if f, ok := fs.find(name, "string"); ok {
+		switch t := f.Value.(type) {
+		case nil:
+			v, _ := f.Default.(string)
+			return v
+		case string:
+			return t
+		}
+	}
+
+	return ""
+}
+
+func (fs Flags) Value(name string) any {
+	for _, f := range fs {
+		if f.Name == name {
+			return f.Value
+		}
+	}
+
+	return nil
+}
+
+func (fs Flags) find(name, kind string) (*Flag, bool) {
+	for _, f := range fs {
+		if f.Name == name && f.Type() == kind {
+			return f, true
+		}
+	}
+	return nil, false
+}
+
+func OptionFlags(opts any) []Flag {
 	flags := []Flag{}
 
 	v := reflect.ValueOf(opts)
