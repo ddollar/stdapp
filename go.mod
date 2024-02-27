@@ -9,14 +9,13 @@ require (
 	github.com/ddollar/coalesce v1.1.0
 	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
-	github.com/ddollar/migrate v1.5.1
+	github.com/ddollar/migrate v1.6.0
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.2.0
 	github.com/ddollar/stdgraph v1.5.0
 	github.com/docker/docker v24.0.7+incompatible
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/golangci/golangci-lint v1.55.2
-	github.com/goware/modvendor v0.5.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
@@ -137,7 +136,6 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
-	github.com/mattn/go-zglob v0.0.4 // indirect
 	github.com/mbilski/exhaustivestruct v1.2.0 // indirect
 	github.com/mgechev/revive v1.3.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect

@@ -14,5 +14,4 @@ test:
 
 vendor:
 	go mod tidy
-	go mod vendor
-	go run vendor/github.com/goware/modvendor/main.go -copy="**/*.c **/*.h"
+	go work vendor
