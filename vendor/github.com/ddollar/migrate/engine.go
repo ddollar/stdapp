@@ -50,7 +50,7 @@ func (e *Engine) Migrate(ctx context.Context, version string) error {
 		return err
 	}
 
-	if _, err := tx.Exec("insert into _migrations values (?)", version); err != nil {
+	if _, err := tx.Exec("insert into _migrations values ($1)", version); err != nil {
 		return err
 	}
 
