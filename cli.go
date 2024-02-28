@@ -44,10 +44,10 @@ func (a *App) cliCmd(ctx stdcli.Context) error {
 	args := ctx.Args()
 
 	if ctx.Flags().Bool("development") {
-		return a.watchAndReload(parseExtensions(ctx.Flags().String("watch")), "cmd", args...)
+		return a.watchAndReload(parseExtensions(ctx.Flags().String("watch")), "cmd", append([]string{"go", "run", fmt.Sprintf("./cmd/%s", args[0])}, args[1:]...)...)
 	}
 
-	cmd := exec.Command("go", append([]string{"run", fmt.Sprintf("./cmd/%s", args[0])}, args[1:]...)...)
+	cmd := exec.Command(args[0], args[1:]...)
 
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
