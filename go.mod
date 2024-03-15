@@ -11,7 +11,7 @@ require (
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
 	github.com/ddollar/migrate v1.6.0
 	github.com/ddollar/stdapi v1.0.3
-	github.com/ddollar/stdcli v1.2.0
+	github.com/ddollar/stdcli v1.4.1
 	github.com/ddollar/stdgraph v1.5.0
 	github.com/docker/docker v24.0.7+incompatible
 	github.com/fsnotify/fsnotify v1.7.0
@@ -221,7 +221,7 @@ require (
 	golang.org/x/term v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.17.0 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

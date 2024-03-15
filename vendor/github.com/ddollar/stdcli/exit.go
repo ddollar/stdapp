@@ -3,21 +3,21 @@ package stdcli
 import "fmt"
 
 type ExitCoder interface {
-	Code() int
+	ExitCode() int
 }
 
-type ExitCode struct {
+type exitCode struct {
 	code int
 }
 
-func (e ExitCode) Code() int {
+func (e exitCode) ExitCode() int {
 	return e.code
 }
 
-func (e ExitCode) Error() string {
+func (e exitCode) Error() string {
 	return fmt.Sprintf("exit %d", e.code)
 }
 
-func Exit(code int) ExitCode {
-	return ExitCode{code: code}
+func Exit(code int) ExitCoder {
+	return exitCode{code: code}
 }

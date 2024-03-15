@@ -143,8 +143,8 @@ github.com/ddollar/migrate v1.6.0 h1:rwr+glBEIXhKJfgHpm/UxnkXQsA2gTkMMEFiyCH6DGk
 github.com/ddollar/migrate v1.6.0/go.mod h1:A4ZdjBOFk3ZZRLkw301cMRRKYzZWS4fpwY5GqNG/WaQ=
 github.com/ddollar/stdapi v1.0.3 h1:/Nsm2UmLh0GB0IUFBL8KXrSOUreW/yAwfyUvJ/CE+nU=
 github.com/ddollar/stdapi v1.0.3/go.mod h1:ck4AfP20jGAgzx0laO7NSvDBh6uKmqYJAWTvcvs4Clc=
-github.com/ddollar/stdcli v1.2.0 h1:qIKJHJdLKU914G2AqtepKfWXKtwFZ6FD47Rqj054QWc=
-github.com/ddollar/stdcli v1.2.0/go.mod h1:E8mzBFpOJliIOptkMtnRrG7N0rw8nrbc21g6lfVrPr0=
+github.com/ddollar/stdcli v1.4.1 h1:epVPwnhevbczfuqM5O3XdlLAL1jAmaBdRihylwZplCI=
+github.com/ddollar/stdcli v1.4.1/go.mod h1:MBv5ifIi9k43SwCe+8s0+kxCorYyH0Wf1oFOQMepSTc=
 github.com/ddollar/stdgraph v1.5.0 h1:upT7z7tKGLOWRS4ddTvkbqU7Qb0Xo0X2rM0Rll3ecO8=
 github.com/ddollar/stdgraph v1.5.0/go.mod h1:q99FNl+sfDRkwYeHmk4KxF6ZOF1o4HFPufVlFs+NK0I=
 github.com/denis-tingaikin/go-header v0.4.3 h1:tEaZKAlqql6SKCY++utLmkPLd6K8IBM20Ha7UVm+mtU=
@@ -1014,8 +1014,8 @@ google.golang.org/protobuf v1.24.0/go.mod h1:r/3tXBNzIEhYS9I1OUVjXDlt8tc493IdKGj
 google.golang.org/protobuf v1.25.0/go.mod h1:9JNX74DMeImyA3h4bdi1ymwjUzf21/xIlbajtzgsN7c=
 google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp09yW+WbY/TyQbw=
 google.golang.org/protobuf v1.26.0/go.mod h1:9q0QmTI4eRPtz6boOQmLYwt+qCgq0jsYwAQnmE0givc=
-google.golang.org/protobuf v1.32.0 h1:pPC6BG5ex8PDFnkbrGU3EixyhKcQ2aDuBS36lqK/C7I=
-google.golang.org/protobuf v1.32.0/go.mod h1:c6P6GXX6sHbq/GpV6MGZEdwhWPcYBgnhAHhKbcUYpos=
+google.golang.org/protobuf v1.33.0 h1:uNO2rsAINq/JlFpSdYEKIZ0uKD/R9cpdv0T+yoGwGmI=
+google.golang.org/protobuf v1.33.0/go.mod h1:c6P6GXX6sHbq/GpV6MGZEdwhWPcYBgnhAHhKbcUYpos=
 gopkg.in/alecthomas/kingpin.v2 v2.2.6/go.mod h1:FMv+mEhP44yOT+4EoQTLFTRgOQ1FBLkstjWtayDeSgw=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=

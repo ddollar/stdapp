@@ -6,29 +6,29 @@ import (
 )
 
 type TableWriter interface {
-	Append(row ...string)
+	Append(row ...any)
 	Print() error
 }
 
 type tableWriter struct {
 	ctx     Context
-	columns []string
-	rows    [][]string
+	columns []any
+	rows    [][]any
 }
 
 var _ TableWriter = &tableWriter{}
 
-func (t *tableWriter) Append(row ...string) {
+func (t *tableWriter) Append(row ...any) {
 	t.rows = append(t.rows, row)
 }
 
 func (t *tableWriter) Print() error {
 	f := t.formatString()
 
-	t.ctx.Writef(fmt.Sprintf("<h1>%s</h1>\n", f), t.columns) //nolint:errcheck
+	t.ctx.Writef(fmt.Sprintf("<h1>%s</h1>\n", f), t.columns...) //nolint:errcheck
 
 	for _, r := range t.rows {
-		t.ctx.Writef(fmt.Sprintf("<value>%s</value>\n", f), r) //nolint:errcheck
+		t.ctx.Writef(fmt.Sprintf("<value>%s</value>\n", f), r...) //nolint:errcheck
 	}
 
 	return nil

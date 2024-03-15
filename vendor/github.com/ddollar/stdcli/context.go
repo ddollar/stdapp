@@ -16,12 +16,14 @@ type Context interface {
 
 	Arg(i int) string
 	Args() []string
+	Cleanup(func())
 	Execute(cmd string, args ...string) ([]byte, error)
 	Flags() Flags
 	InfoWriter() InfoWriter
 	IsTerminal() bool
 	ReadSecret() (string, error)
 	Run(cmd string, args ...string) error
+	TableWriter(columns ...any) TableWriter
 	Terminal(cmd string, args ...string) error
 	Version() string
 	Writef(format string, args ...any)
@@ -47,6 +49,13 @@ func (c *defaultContext) Arg(i int) string {
 
 func (c *defaultContext) Args() []string {
 	return []string(c.args)
+}
+
+func (c *defaultContext) Cleanup(fn func()) {
+	go func() {
+		<-c.Done()
+		fn()
+	}()
 }
 
 func (c *defaultContext) Engine() *Engine {
@@ -132,6 +141,6 @@ func (c *defaultContext) Writef(format string, args ...any) {
 	c.engine.Writer.Write([]byte(fmt.Sprintf(format, args...))) //nolint:errcheck
 }
 
-func (c *defaultContext) TableWriter(columns ...string) TableWriter {
+func (c *defaultContext) TableWriter(columns ...any) TableWriter {
 	return &tableWriter{ctx: c, columns: columns}
 }

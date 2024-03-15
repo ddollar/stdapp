@@ -47,7 +47,7 @@ func (w *Writer) Error(err error) error {
 	return err
 }
 
-func (w *Writer) Errorf(format string, args ...interface{}) error {
+func (w *Writer) Errorf(format string, args ...any) error {
 	return w.Error(errors.Errorf(format, args...))
 }
 
@@ -59,7 +59,7 @@ func (w *Writer) IsTerminal() bool {
 	return false
 }
 
-func (w *Writer) Sprintf(format string, args ...interface{}) string {
+func (w *Writer) Sprintf(format string, args ...any) string {
 	return fmt.Sprintf(w.renderTags(format), args...)
 }
 
@@ -72,7 +72,7 @@ func (w *Writer) Write(data []byte) (int, error) {
 	return n, nil
 }
 
-func (w *Writer) Writef(format string, args ...interface{}) (int, error) {
+func (w *Writer) Writef(format string, args ...any) (int, error) {
 	n, err := fmt.Fprintf(w.Stdout, w.renderTags(format), args...)
 	if err != nil {
 		return 0, errors.WithStack(err)
@@ -122,7 +122,9 @@ func stripColor(s string) string {
 	return colorStripper.ReplaceAllString(s, "")
 }
 
-func stripTag(s string) string {
+func stripTag(v any) string {
+	s := fmt.Sprintf("%v", v)
+
 	match := tagStripper.FindStringSubmatch(s)
 
 	if len(match) != 2 {

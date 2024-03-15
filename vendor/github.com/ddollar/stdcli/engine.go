@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/signal"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 type Engine struct {
@@ -32,13 +34,8 @@ func (e *Engine) Command(command, description string, fn HandlerFunc, opts Comma
 }
 
 func (e *Engine) Execute(args []string) int {
-	ctx, cancel := context.WithCancel(context.Background())
-
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-
-	defer stop(c, cancel)
-	go wait(ctx, c, cancel)
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
 
 	return e.ExecuteContext(ctx, args)
 }
@@ -67,26 +64,13 @@ func (e *Engine) ExecuteContext(ctx context.Context, args []string) int {
 	}
 
 	err := m.ExecuteContext(ctx, cargs)
-	switch t := err.(type) {
+	switch t := errors.Cause(err).(type) {
 	case nil:
 		return 0
 	case ExitCoder:
-		return t.Code()
+		return t.ExitCode()
 	default:
 		e.Writer.Errorf("%s", t) // nolint:errcheck
 		return 1
-	}
-}
-
-func stop(c chan<- os.Signal, cancel func()) {
-	signal.Stop(c)
-	cancel()
-}
-
-func wait(ctx context.Context, c <-chan os.Signal, cancel func()) {
-	select {
-	case <-c:
-		cancel()
-	case <-ctx.Done():
 	}
 }
