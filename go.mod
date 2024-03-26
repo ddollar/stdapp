@@ -13,7 +13,7 @@ require (
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.4.1
 	github.com/ddollar/stdgraph v1.5.0
-	github.com/docker/docker v24.0.7+incompatible
+	github.com/docker/docker v24.0.9+incompatible
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/golangci/golangci-lint v1.55.2
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
