@@ -117,11 +117,6 @@ func (a *App) cliMigrate(ctx stdcli.Context) error {
 	dry := false
 	schema := "public"
 
-	if d := ctx.Flags().String("dir"); d != "" {
-		args = append(args, "-d", d)
-		dir = d
-	}
-
 	if ctx.Flags().Bool("dry") {
 		args = append(args, "--dry")
 		dry = true
@@ -152,6 +147,17 @@ func (a *App) cliMigrate(ctx stdcli.Context) error {
 
 	if err := migrate.Run(context.Background(), u.String(), a.opts.Migrations, mopts); err != nil {
 		return errors.WithStack(err)
+	}
+
+	for _, domain := range a.domains() {
+		mopts := migrate.Options{
+			Dir:    filepath.Join(dir, domain),
+			DryRun: dry,
+		}
+
+		if err := migrate.Run(context.Background(), u.String(), a.opts.Migrations, mopts); err != nil {
+			return errors.WithStack(err)
+		}
 	}
 
 	return nil
