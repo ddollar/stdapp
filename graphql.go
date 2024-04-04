@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/ddollar/coalesce"
+	"github.com/ddollar/errors"
 	"github.com/ddollar/graphql-transport-ws/graphqlws"
 	"github.com/ddollar/stdapi"
 	"github.com/ddollar/stdgraph"
-	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
@@ -42,12 +42,12 @@ func (a *App) graphQL() (*GraphQL, error) {
 
 		r, err := a.opts.Resolver(db, domain)
 		if err != nil {
-			return nil, errors.WithStack(err)
+			return nil, errors.Wrap(err)
 		}
 
 		h, err := stdgraph.NewHandler(r.Schema(), r, gopts...)
 		if err != nil {
-			return nil, errors.WithStack(err)
+			return nil, errors.Wrap(err)
 		}
 
 		g.server.Router.PathPrefix(fmt.Sprintf("%s/api/%s", a.opts.Prefix, domain)).Handler(a.WithMiddleware(h))

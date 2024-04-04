@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/ddollar/coalesce"
+	"github.com/ddollar/errors"
 	"github.com/ddollar/logger"
 	"github.com/ddollar/stdcli"
-	"github.com/pkg/errors"
 )
 
 var version = "dev"
@@ -121,7 +121,7 @@ func (a *App) runEnv(container string, env map[string]string, command string, ar
 	if a.opts.Compose {
 		tty, err := isTTY(os.Stdin)
 		if err != nil {
-			return errors.WithStack(err)
+			return errors.Wrap(err)
 		}
 
 		r = RunnerCompose(container, tty, env)
@@ -140,7 +140,7 @@ func (a *App) runEnv(container string, env map[string]string, command string, ar
 	}
 
 	if err := cmd.Run(); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	return nil
@@ -149,7 +149,7 @@ func (a *App) runEnv(container string, env map[string]string, command string, ar
 func isTTY(f *os.File) (bool, error) {
 	stat, err := f.Stat()
 	if err != nil {
-		return false, errors.WithStack(err)
+		return false, errors.Wrap(err)
 	}
 
 	return (stat.Mode() & os.ModeCharDevice) != 0, nil

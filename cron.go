@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/ddollar/errors"
 	"github.com/ddollar/stdcli"
 	"github.com/docker/docker/api/types"
 	docker "github.com/docker/docker/client"
@@ -30,7 +31,7 @@ type Cron struct {
 func NewCron(ctx stdcli.Context) (*Cron, error) {
 	dc, err := dockerClient()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err)
 	}
 
 	c := &Cron{
@@ -44,7 +45,7 @@ func NewCron(ctx stdcli.Context) (*Cron, error) {
 func (cc *Cron) Run() error {
 	cs, err := dockerProjectContainers(cc.docker)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	cr := cron.New(cron.WithParser(cron.NewParser(
@@ -62,7 +63,7 @@ func (cc *Cron) Run() error {
 				cc.ctx.Writef("ns=cron at=start name=%q schedule=%q command=%q\n", name, schedule, command)
 
 				if _, err := cr.AddFunc(schedule, cc.job(name, c.ID, command)); err != nil {
-					return err
+					return errors.Wrap(err)
 				}
 			}
 		}
@@ -78,7 +79,7 @@ func (cc *Cron) exec(id, command string) error {
 
 	cmd, err := shellquote.Split(command)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	copts := types.ExecConfig{
@@ -89,7 +90,7 @@ func (cc *Cron) exec(id, command string) error {
 
 	e, err := cc.docker.ContainerExecCreate(ctx, id, copts)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	sopts := types.ExecStartCheck{
@@ -99,7 +100,7 @@ func (cc *Cron) exec(id, command string) error {
 
 	res, err := cc.docker.ContainerExecAttach(ctx, e.ID, sopts)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	io.Copy(os.Stdout, res.Reader)

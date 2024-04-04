@@ -8,11 +8,10 @@ import (
 	"time"
 
 	"example.org/stdapp/api/resolver"
+	"github.com/ddollar/errors" //go:embed db/migrate/*.sql
 	"github.com/ddollar/stdapp"
-	"github.com/pkg/errors"
 )
 
-//go:embed db/migrate/*.sql
 var migrations embed.FS
 
 //go:embed all:web/dist
@@ -31,7 +30,7 @@ func main() {
 func app() (*stdapp.App, error) {
 	sweb, err := fs.Sub(fs.FS(web), "web/dist")
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, errors.Wrap(err)
 	}
 
 	opts := stdapp.Options{
@@ -45,7 +44,7 @@ func app() (*stdapp.App, error) {
 
 	a, err := stdapp.New(opts)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, errors.Wrap(err)
 	}
 
 	return a, nil

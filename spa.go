@@ -4,8 +4,8 @@ import (
 	"io/fs"
 	"net/http"
 
+	"github.com/ddollar/errors"
 	"github.com/ddollar/stdapi"
-	"github.com/pkg/errors"
 )
 
 type SPA struct {
@@ -33,7 +33,7 @@ func (s SPA) Open(name string) (fs.File, error) {
 	} else {
 		f, err := s.app.opts.Web.Open("index.html")
 		if err != nil {
-			return nil, errors.WithStack(err)
+			return nil, errors.Wrap(err)
 		}
 
 		return f, nil

@@ -8,8 +8,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/ddollar/errors"
 	"github.com/fsnotify/fsnotify"
-	"github.com/pkg/errors"
 )
 
 const debounce = 100 * time.Millisecond
@@ -20,7 +20,7 @@ func (a *App) watchAndReload(extensions []string, cmd string, args ...string) er
 	ch := make(chan string)
 
 	if err := a.watchChanges(extensions, ch); err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	for {
@@ -34,17 +34,17 @@ func (a *App) watchAndReload(extensions []string, cmd string, args ...string) er
 		cmd.Stderr = os.Stderr
 
 		if err := cmd.Start(); err != nil {
-			return errors.WithStack(err)
+			return errors.Wrap(err)
 		}
 
 		a.logger.At("change").Logf("file=%q", <-ch)
 
 		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGTERM); err != nil {
-			return errors.WithStack(err)
+			return errors.Wrap(err)
 		}
 
 		if _, err := cmd.Process.Wait(); err != nil {
-			return errors.WithStack(err)
+			return errors.Wrap(err)
 		}
 	}
 }
@@ -52,7 +52,7 @@ func (a *App) watchAndReload(extensions []string, cmd string, args ...string) er
 func (a *App) watchChanges(extensions []string, ch chan<- string) error {
 	w, err := fsnotify.NewWatcher()
 	if err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	eh := map[string]bool{}
@@ -76,12 +76,12 @@ func (a *App) watchChanges(extensions []string, ch chan<- string) error {
 		return nil
 	})
 	if err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	for path := range paths {
 		if err := w.Add(path); err != nil {
-			return errors.WithStack(err)
+			return errors.Wrap(err)
 		}
 	}
 

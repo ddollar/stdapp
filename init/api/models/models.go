@@ -32,7 +32,7 @@ func (m *Models) Get(v any, id string) error {
 	pks := md.TableModel().Table().PKs
 
 	if len(pks) != 1 {
-		return fmt.Errorf("one primary key expected")
+		return errors.Errorf("one primary key expected")
 	}
 
 	for _, pk := range pks {
@@ -40,7 +40,7 @@ func (m *Models) Get(v any, id string) error {
 	}
 
 	if err := md.Select(); err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
 	return nil
@@ -50,7 +50,7 @@ func (m *Models) List(vs any) error {
 	q := m.db.Model(vs)
 
 	if reflect.TypeOf(vs).Kind() != reflect.Ptr || reflect.TypeOf(vs).Elem().Kind() != reflect.Slice {
-		return fmt.Errorf("pointer to slice expected")
+		return errors.Errorf("pointer to slice expected")
 	}
 
 	v := reflect.New(reflect.TypeOf(vs).Elem()).Interface()
@@ -93,7 +93,7 @@ func (m *Models) Save(v any, columns ...string) error {
 	}
 
 	if _, err := md.Insert(); err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
 	return nil
@@ -112,7 +112,7 @@ func (m *Models) TableChanged(ctx context.Context, name string) <-chan string {
 func (m *Models) transaction(fn func(*Models) error) error {
 	db, ok := m.db.(*pg.DB)
 	if !ok {
-		return fmt.Errorf("transactions unsupported on model db")
+		return errors.Errorf("transactions unsupported on model db")
 	}
 
 	return db.RunInTransaction(context.Background(), func(tx *pg.Tx) error {
@@ -199,7 +199,7 @@ func sliceType(vs any) (any, error) {
 	}
 
 	if vst.Kind() != reflect.Slice {
-		return nil, fmt.Errorf("slice expected")
+		return nil, errors.Errorf("slice expected")
 	}
 
 	return reflect.New(vst.Elem()).Interface(), nil

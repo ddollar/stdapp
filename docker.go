@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ddollar/errors"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	docker "github.com/docker/docker/client"
-	"github.com/pkg/errors"
 )
 
 func dockerClient() (*docker.Client, error) {
@@ -17,7 +17,7 @@ func dockerClient() (*docker.Client, error) {
 		docker.WithAPIVersionNegotiation(),
 	)
 	if err != nil {
-		return nil, errors.Wrapf(err, "could not initialize docker client")
+		return nil, errors.Wrap(err)
 	}
 
 	return dc, nil
@@ -28,17 +28,17 @@ func dockerProjectContainers(dc *docker.Client) ([]types.Container, error) {
 
 	host, err := os.Hostname()
 	if err != nil {
-		return nil, errors.Wrapf(err, "could not get hostname")
+		return nil, errors.Wrap(err)
 	}
 
 	c, err := dc.ContainerInspect(ctx, host)
 	if err != nil {
-		return nil, errors.Wrap(err, "could not inspect container")
+		return nil, errors.Wrap(err)
 	}
 
 	project, ok := c.Config.Labels["com.docker.compose.project"]
 	if !ok {
-		return nil, fmt.Errorf("could not find docker compose project name")
+		return nil, errors.Errorf("could not find docker compose project name")
 	}
 
 	opts := types.ContainerListOptions{
@@ -49,7 +49,7 @@ func dockerProjectContainers(dc *docker.Client) ([]types.Container, error) {
 
 	cs, err := dc.ContainerList(ctx, opts)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err)
 	}
 
 	return cs, nil

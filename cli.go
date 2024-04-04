@@ -68,11 +68,11 @@ func (a *App) cliCron(ctx stdcli.Context) error {
 
 	cc, err := NewCron(ctx)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	if err := cc.Run(); err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	return nil
@@ -81,12 +81,12 @@ func (a *App) cliCron(ctx stdcli.Context) error {
 func (a *App) cliDeployment(ctx stdcli.Context) error {
 	data, err := exec.Command("git", "remote", "get-url", "deploy").CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("no deploy remote found")
+		return errors.Errorf("no deploy remote found")
 	}
 
 	u, err := url.Parse(strings.TrimSpace(string(data)))
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	cmd := exec.Command("ssh", "-t", u.Host, fmt.Sprintf(`cd %s && bash -l -c "sa %s"`, strings.TrimPrefix(u.Path, "/"), strings.Join(ctx.Args(), " ")))
@@ -106,7 +106,7 @@ func (a *App) cliInit(ctx stdcli.Context) error {
 	name := ctx.Arg(0)
 
 	if err := initApp(name); err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	return nil
@@ -127,7 +127,7 @@ func (a *App) cliMigrate(ctx stdcli.Context) error {
 
 	u, err := url.Parse(a.opts.Database)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	mopts := migrate.Options{
@@ -205,7 +205,7 @@ func (a *App) cliWeb(ctx stdcli.Context) error {
 
 	s, err := a.spa()
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	port := coalesce.Any(ctx.Flags().Int("port"), 8000)
@@ -224,7 +224,7 @@ func (a *App) webDevelopment() error {
 	eg.Go(a.webDevelopmentVite)
 
 	if err := eg.Wait(); err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	return nil
@@ -235,7 +235,7 @@ func (a *App) webDevelopmentProxy() error {
 
 	u, err := url.Parse("http://localhost:8001")
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	rp := httputil.NewSingleHostReverseProxy(u)
@@ -243,7 +243,7 @@ func (a *App) webDevelopmentProxy() error {
 	s.Router.PathPrefix(a.opts.Prefix).Handler(a.WithMiddleware(rp))
 
 	if err := s.Listen("https", ":8000"); err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	return nil

@@ -7,8 +7,8 @@ import (
 	"os/exec"
 
 	"github.com/ddollar/coalesce"
+	"github.com/ddollar/errors"
 	"github.com/ddollar/stdapp"
-	"github.com/pkg/errors"
 )
 
 type compose struct {
@@ -45,13 +45,13 @@ func options() (*stdapp.Options, error) {
 
 	data, err := exec.Command("docker", "compose", "config", "--format=json").CombinedOutput()
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, errors.Wrap(err)
 	}
 
 	var c compose
 
 	if err := json.Unmarshal(data, &c); err != nil {
-		return nil, errors.WithStack(err)
+		return nil, errors.Wrap(err)
 	}
 
 	opts.Name = c.Name

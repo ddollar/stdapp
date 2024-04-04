@@ -18,7 +18,7 @@ type Resolver struct {
 func New(db orm.DB, domain string) (stdapp.Resolver, error) {
 	m, err := models.New(db)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	r := &Resolver{
