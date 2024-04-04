@@ -3,6 +3,7 @@ package stdapp
 import (
 	"context"
 	"fmt"
+	"io/fs"
 	"net/http/httputil"
 	"net/url"
 	"os"
@@ -14,10 +15,10 @@ import (
 	"time"
 
 	"github.com/ddollar/coalesce"
+	"github.com/ddollar/errors"
 	"github.com/ddollar/migrate"
 	"github.com/ddollar/stdapi"
 	"github.com/ddollar/stdcli"
-	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -28,13 +29,13 @@ func (a *App) cliApi(ctx stdcli.Context) error {
 
 	g, err := a.graphQL()
 	if err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	port := coalesce.Any(ctx.Flags().Int("port"), 8000)
 
 	if err := g.server.Listen("https", fmt.Sprintf(":%d", port)); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	return nil
@@ -54,7 +55,7 @@ func (a *App) cliCmd(ctx stdcli.Context) error {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	return nil
@@ -95,7 +96,7 @@ func (a *App) cliDeployment(ctx stdcli.Context) error {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	return nil
@@ -113,18 +114,11 @@ func (a *App) cliInit(ctx stdcli.Context) error {
 
 func (a *App) cliMigrate(ctx stdcli.Context) error {
 	args := []string{}
-	dir := filepath.Join("db", "migrate")
 	dry := false
-	schema := "public"
 
 	if ctx.Flags().Bool("dry") {
 		args = append(args, "--dry")
 		dry = true
-	}
-
-	if s := ctx.Flags().String("schema"); s != "" {
-		args = append(args, "-s", s)
-		schema = s
 	}
 
 	if a.opts.Compose {
@@ -136,27 +130,22 @@ func (a *App) cliMigrate(ctx stdcli.Context) error {
 		return err
 	}
 
-	q := u.Query()
-	q.Set("search_path", schema)
-	u.RawQuery = q.Encode()
-
 	mopts := migrate.Options{
-		Dir:    dir,
 		DryRun: dry,
 	}
 
-	if err := migrate.Run(context.Background(), u.String(), a.opts.Migrations, mopts); err != nil {
-		return errors.WithStack(err)
-	}
+	for _, domain := range append([]string{""}, a.domains()...) {
+		q := u.Query()
+		q.Set("search_path", domain)
+		u.RawQuery = q.Encode()
 
-	for _, domain := range a.domains() {
-		mopts := migrate.Options{
-			Dir:    filepath.Join(dir, domain),
-			DryRun: dry,
+		mfs, err := fs.Sub(a.opts.Migrations, filepath.Join("db", "migrate", domain))
+		if err != nil {
+			return errors.Wrap(err)
 		}
 
-		if err := migrate.Run(context.Background(), u.String(), a.opts.Migrations, mopts); err != nil {
-			return errors.WithStack(err)
+		if err := migrate.Run(context.Background(), u.String(), mfs, mopts); err != nil {
+			return errors.Wrap(err)
 		}
 	}
 
@@ -171,7 +160,7 @@ func (a *App) cliMigration(ctx stdcli.Context) error {
 
 	fd, err := os.Create(file)
 	if err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 	defer fd.Close()
 
@@ -222,7 +211,7 @@ func (a *App) cliWeb(ctx stdcli.Context) error {
 	port := coalesce.Any(ctx.Flags().Int("port"), 8000)
 
 	if err := s.server.Listen("https", fmt.Sprintf(":%d", port)); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	return nil
@@ -262,7 +251,7 @@ func (a *App) webDevelopmentProxy() error {
 
 func (a *App) webDevelopmentVite() error {
 	if err := os.Chdir("web"); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	cmd := exec.Command("yarn", "run", "dev")
@@ -276,7 +265,7 @@ func (a *App) webDevelopmentVite() error {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	return nil

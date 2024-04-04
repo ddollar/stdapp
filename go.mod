@@ -1,15 +1,15 @@
 module github.com/ddollar/stdapp
 
-go 1.21
+go 1.22.1
 
-toolchain go1.21.6
+toolchain go1.22.2
 
 require (
 	github.com/cespare/reflex v0.3.1
 	github.com/ddollar/coalesce v1.1.0
 	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
-	github.com/ddollar/migrate v1.6.0
+	github.com/ddollar/migrate v1.7.0
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.4.1
 	github.com/ddollar/stdgraph v1.5.0
@@ -63,6 +63,7 @@ require (
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
 	github.com/daixiang0/gci v0.12.1 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
+	github.com/ddollar/errors v0.0.2 // indirect
 	github.com/denis-tingaikin/go-header v0.4.3 // indirect
 	github.com/distribution/reference v0.5.0 // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
@@ -233,3 +234,5 @@ require (
 	mvdan.cc/lint v0.0.0-20170908181259-adc824a0674b // indirect
 	mvdan.cc/unparam v0.0.0-20240104100049-c549a3470d14 // indirect
 )
+
+// replace github.com/ddollar/migrate => ../migrate

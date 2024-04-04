@@ -10,7 +10,6 @@ import (
 )
 
 type Options struct {
-	Dir    string
 	DryRun bool
 }
 
@@ -27,7 +26,6 @@ func Run(ctx context.Context, dburl string, migrations fs.FS, opts Options) erro
 
 	e := &Engine{
 		db:     db,
-		dir:    opts.Dir,
 		dryrun: opts.DryRun,
 		fs:     migrations,
 	}

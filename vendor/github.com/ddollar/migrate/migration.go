@@ -5,6 +5,8 @@ import (
 	"io/fs"
 	"sort"
 	"strings"
+
+	"github.com/ddollar/errors"
 )
 
 type Migration struct {
@@ -17,30 +19,29 @@ type Migrations []Migration
 func LoadMigrations(e *Engine) (Migrations, error) {
 	raw := map[string]Migration{}
 
-	root := "."
-
-	if e.dir != "" {
-		root = e.dir
+	files, err := fs.ReadDir(e.fs, ".")
+	if err != nil {
+		return nil, errors.Wrap(err)
 	}
 
-	err := fs.WalkDir(e.fs, root, func(path string, d fs.DirEntry, err error) error {
-		if d == nil || d.IsDir() {
-			return nil
+	for _, file := range files {
+		if file.IsDir() {
+			continue
 		}
-		parts := strings.SplitN(d.Name(), ".", 2)
+
+		parts := strings.SplitN(file.Name(), ".", 2)
 		if len(parts) != 2 {
-			return fmt.Errorf("invalid migration: %s", d.Name())
+			return nil, fmt.Errorf("invalid migration: %s", file.Name())
 		}
+
 		mm := raw[parts[0]]
-		mm.Body, err = fs.ReadFile(e.fs, path)
+
+		mm.Body, err = fs.ReadFile(e.fs, file.Name())
 		if err != nil {
-			return err
+			return nil, err
 		}
+
 		raw[parts[0]] = mm
-		return nil
-	})
-	if err != nil {
-		return nil, err
 	}
 
 	ms := Migrations{}

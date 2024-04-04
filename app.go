@@ -72,7 +72,6 @@ func (a *App) Run(args []string) int {
 	c.Command("migrate", "run migrations", a.cliMigrate, stdcli.CommandOptions{
 		Flags: []stdcli.Flag{
 			stdcli.BoolFlag("dry", "", "dry run"),
-			stdcli.StringFlag("schema", "s", "database schema to run migrations in"),
 		},
 	})
 
