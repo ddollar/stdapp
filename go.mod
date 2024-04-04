@@ -9,7 +9,7 @@ require (
 	github.com/ddollar/coalesce v1.1.0
 	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
-	github.com/ddollar/migrate v1.7.0
+	github.com/ddollar/migrate v1.7.1
 	github.com/ddollar/stdapi v1.0.3
 	github.com/ddollar/stdcli v1.4.1
 	github.com/ddollar/stdgraph v1.5.0
@@ -63,7 +63,7 @@ require (
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
 	github.com/daixiang0/gci v0.12.1 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
-	github.com/ddollar/errors v0.0.2 // indirect
+	github.com/ddollar/errors v1.0.1 // indirect
 	github.com/denis-tingaikin/go-header v0.4.3 // indirect
 	github.com/distribution/reference v0.5.0 // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect

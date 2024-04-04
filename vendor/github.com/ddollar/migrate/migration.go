@@ -1,7 +1,6 @@
 package migrate
 
 import (
-	"fmt"
 	"io/fs"
 	"sort"
 	"strings"
@@ -31,14 +30,14 @@ func LoadMigrations(e *Engine) (Migrations, error) {
 
 		parts := strings.SplitN(file.Name(), ".", 2)
 		if len(parts) != 2 {
-			return nil, fmt.Errorf("invalid migration: %s", file.Name())
+			return nil, errors.Errorf("invalid migration: %s", file.Name())
 		}
 
 		mm := raw[parts[0]]
 
 		mm.Body, err = fs.ReadFile(e.fs, file.Name())
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err)
 		}
 
 		raw[parts[0]] = mm

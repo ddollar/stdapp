@@ -137,12 +137,16 @@ github.com/ddollar/coalesce v1.1.0 h1:QQK/iuGpE15xmSYsj8qTDatWiaE0HQKhVSwGEeA22p
 github.com/ddollar/coalesce v1.1.0/go.mod h1:i/2y5jKBYx/TVIl+P1uzdiMZCFEPX/HqRhpWtHxDWuk=
 github.com/ddollar/errors v0.0.2 h1:WRn/CGB4Surw/LeJZfw2iHF/g6xFb2M/q+xsSNkI2xs=
 github.com/ddollar/errors v0.0.2/go.mod h1:yBSEjSfaM4IDKdpz20UHptW81ZRG9Z36BaJ2IisXYvs=
+github.com/ddollar/errors v1.0.1 h1:EdOibPjooZBFaOlPGyy1vOHJ4i3hkjQGgG/J1c+hxIM=
+github.com/ddollar/errors v1.0.1/go.mod h1:JBEJVrHU6BGVmBxHL7GR/Nh4X+Qek1EfXsA7xyxswrY=
 github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2 h1:Lsq95mhfoFeoaRGNnMWuxtFXip3qYeH+X/w9IUHXq98=
 github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2/go.mod h1:a47eRjVBKkU3gu/eLnV06s58CFcfSbMRV27t1g0z9z0=
 github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52 h1:OYnMA9hPUciXiWXoYuKXexWh+yfbUYtV+BwKTsm7U5A=
 github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52/go.mod h1:n6+tdoM+N4XRXpS4eENqL2iD6c9rC1XrJ+PjoFiafTU=
 github.com/ddollar/migrate v1.7.0 h1:EciPt3ClJ5k36htpTlHccpnkDnZB9ptftH6oiJUWlyw=
 github.com/ddollar/migrate v1.7.0/go.mod h1:lp1sMtQ0L88Q4X0te115m64XDjnDMxQ7aiqsIN835zI=
+github.com/ddollar/migrate v1.7.1 h1:B/nL4oXioN/0hBv/JXt5TME8uElzDbdxc9kk5O4yUHo=
+github.com/ddollar/migrate v1.7.1/go.mod h1:H1NUaFAmTCdOAWI7ZuwqfYnVtvE6lRwlC4Y/WRScAYg=
 github.com/ddollar/stdapi v1.0.3 h1:/Nsm2UmLh0GB0IUFBL8KXrSOUreW/yAwfyUvJ/CE+nU=
 github.com/ddollar/stdapi v1.0.3/go.mod h1:ck4AfP20jGAgzx0laO7NSvDBh6uKmqYJAWTvcvs4Clc=
 github.com/ddollar/stdcli v1.4.1 h1:epVPwnhevbczfuqM5O3XdlLAL1jAmaBdRihylwZplCI=

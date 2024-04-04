@@ -148,8 +148,8 @@ github.com/davecgh/go-spew/spew
 # github.com/ddollar/coalesce v1.1.0
 ## explicit; go 1.20
 github.com/ddollar/coalesce
-# github.com/ddollar/errors v0.0.2
-## explicit; go 1.22.1
+# github.com/ddollar/errors v1.0.1
+## explicit; go 1.13
 github.com/ddollar/errors
 # github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
 ## explicit; go 1.15
@@ -160,7 +160,7 @@ github.com/ddollar/graphql-transport-ws/graphqlws/internal/connection
 github.com/ddollar/logger
 # github.com/ddollar/migrate v1.6.0
 ## explicit; go 1.22.1
-# github.com/ddollar/migrate v1.7.0
+# github.com/ddollar/migrate v1.7.1
 ## explicit; go 1.22.1
 github.com/ddollar/migrate
 # github.com/ddollar/stdapi v1.0.3

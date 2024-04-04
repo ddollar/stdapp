@@ -3,10 +3,11 @@ package migrate
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"io/fs"
 	"net/url"
+
+	"github.com/ddollar/errors"
 )
 
 type Options struct {
@@ -16,12 +17,12 @@ type Options struct {
 func Run(ctx context.Context, dburl string, migrations fs.FS, opts Options) error {
 	u, err := url.Parse(dburl)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	db, err := sql.Open(u.Scheme, dburl)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	e := &Engine{
@@ -31,12 +32,12 @@ func Run(ctx context.Context, dburl string, migrations fs.FS, opts Options) erro
 	}
 
 	if err := e.Initialize(); err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	ms, err := e.Pending()
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	for _, m := range ms {

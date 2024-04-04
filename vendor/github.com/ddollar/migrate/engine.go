@@ -3,9 +3,10 @@ package migrate
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"io/fs"
 	"sort"
+
+	"github.com/ddollar/errors"
 )
 
 type Engine struct {
@@ -19,19 +20,19 @@ type Engine struct {
 
 func (e *Engine) Initialize() error {
 	if _, err := e.db.Exec(`create table if not exists "_migrations" (version varchar unique not null);`); err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	ms, err := LoadMigrations(e)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	e.migrations = ms
 
 	ss, err := LoadState(e)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	e.state = ss
@@ -42,20 +43,20 @@ func (e *Engine) Initialize() error {
 func (e *Engine) Migrate(ctx context.Context, version string) error {
 	m, ok := e.migrations.Find(version)
 	if !ok {
-		return fmt.Errorf("no such migration: %s", version)
+		return errors.Errorf("no such migration: %s", version)
 	}
 
 	tx, err := e.db.BeginTx(ctx, nil)
 	if err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	if _, err := tx.Exec("insert into _migrations values ($1)", version); err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	if _, err := tx.Exec(string(m.Body)); err != nil {
-		return err
+		return errors.Wrap(err)
 	}
 
 	if e.dryrun {
