@@ -14,7 +14,39 @@ import (
 
 const debounce = 100 * time.Millisecond
 
-func (a *App) watchAndReload(extensions []string, cmd string, args ...string) error {
+func (a *App) spawn(command string, args ...string) (*exec.Cmd, error) {
+	cmd := exec.Command("go", append([]string{"run", ".", command}, args...)...)
+
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setpgid: true,
+	}
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Start(); err != nil {
+		return nil, errors.Wrap(err)
+	}
+
+	return cmd, nil
+}
+
+func (a *App) watchAndReload(extensions []string, command string, args ...string) error {
+	if len(extensions) == 0 {
+		a.logger.At("spawn").Logf("extensions=%q", strings.Join(extensions, ","))
+
+		cmd, err := a.spawn(command, args...)
+		if err != nil {
+			return errors.Wrap(err)
+		}
+
+		if err := cmd.Wait(); err != nil {
+			return errors.Wrap(err)
+		}
+
+		return nil
+	}
+
 	a.logger.At("watch").Logf("extensions=%q", strings.Join(extensions, ","))
 
 	ch := make(chan string)
@@ -24,16 +56,8 @@ func (a *App) watchAndReload(extensions []string, cmd string, args ...string) er
 	}
 
 	for {
-		cmd := exec.Command("go", append([]string{"run", ".", cmd}, args...)...)
-
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			Setpgid: true,
-		}
-
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-
-		if err := cmd.Start(); err != nil {
+		cmd, err := a.spawn(command, args...)
+		if err != nil {
 			return errors.Wrap(err)
 		}
 
