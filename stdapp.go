@@ -16,5 +16,9 @@ func New(opts Options) (*App, error) {
 }
 
 func parseExtensions(flag string) []string {
+	if strings.TrimSpace(flag) == "" {
+		return []string{}
+	}
+
 	return strings.Split(flag, ",")
 }
