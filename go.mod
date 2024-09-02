@@ -1,8 +1,6 @@
 module github.com/ddollar/stdapp
 
-go 1.22.1
-
-toolchain go1.22.2
+go 1.23.0
 
 require (
 	github.com/cespare/reflex v0.3.1
@@ -11,7 +9,7 @@ require (
 	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
 	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
 	github.com/ddollar/migrate v1.7.1
-	github.com/ddollar/stdapi v1.0.3
+	github.com/ddollar/stdapi v1.1.2
 	github.com/ddollar/stdcli v1.4.1
 	github.com/ddollar/stdgraph v1.5.0
 	github.com/docker/docker v25.0.6+incompatible
@@ -101,10 +99,10 @@ require (
 	github.com/golangci/unconvert v0.0.0-20180507085042-28b1c447d1f4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/gordonklaus/ineffassign v0.1.0 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
-	github.com/gorilla/securecookie v1.1.1 // indirect
-	github.com/gorilla/sessions v1.2.1 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/gorilla/mux v1.8.1 // indirect
+	github.com/gorilla/securecookie v1.1.2 // indirect
+	github.com/gorilla/sessions v1.4.0 // indirect
+	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/gostaticanalysis/analysisutil v0.7.1 // indirect
 	github.com/gostaticanalysis/comment v1.4.2 // indirect
 	github.com/gostaticanalysis/forcetypeassert v0.1.0 // indirect

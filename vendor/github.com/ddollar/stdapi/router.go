@@ -17,6 +17,7 @@ type Middleware func(fn HandlerFunc) HandlerFunc
 
 type Router struct {
 	*mux.Router
+
 	Middleware []Middleware
 	Parent     *Router
 	Server     *Server
@@ -24,6 +25,7 @@ type Router struct {
 
 type Route struct {
 	*mux.Route
+
 	Router *Router
 }
 
@@ -72,12 +74,16 @@ func (rt *Router) Static(path string, files FileSystem) Route {
 	}
 }
 
-func (rt *Router) Subrouter(prefix string, fn func(*Router)) {
-	fn(&Router{
+func (rt *Router) Subrouter(prefix string) *Router {
+	return &Router{
 		Parent: rt,
 		Router: rt.PathPrefix(prefix).Subrouter(),
 		Server: rt.Server,
-	})
+	}
+}
+
+func (rt *Router) SubrouterFunc(prefix string, fn func(*Router)) {
+	fn(rt.Subrouter(prefix))
 }
 
 func (rt *Router) Use(mw Middleware) {
@@ -227,26 +233,3 @@ func (rt *Router) wrap(fn HandlerFunc, m ...Middleware) HandlerFunc {
 
 	return m[0](rt.wrap(fn, m[1:len(m)]...))
 }
-
-// type responseWriter struct {
-//   http.ResponseWriter
-//   bytes int64
-//   code  int
-// }
-
-// func (w *responseWriter) Flush() {
-//   if f, ok := w.ResponseWriter.(http.Flusher); ok {
-//     f.Flush()
-//   }
-// }
-
-// func (w *responseWriter) Write(data []byte) (int, error) {
-//   n, err := w.ResponseWriter.Write(data)
-//   w.bytes += int64(n)
-//   return n, err
-// }
-
-// func (w *responseWriter) WriteHeader(code int) {
-//   w.code = code
-//   w.ResponseWriter.WriteHeader(code)
-// }

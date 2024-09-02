@@ -73,7 +73,9 @@ func (a *API) handleRouter(app *App) error {
 		return nil
 	}
 
-	if err := app.opts.Router(a.server); err != nil {
+	r := a.server.Router.PathPrefix(fmt.Sprintf("%s/api", app.opts.Prefix)).Subrouter()
+
+	if err := app.opts.Router(r); err != nil {
 		return errors.Wrap(err)
 	}
 

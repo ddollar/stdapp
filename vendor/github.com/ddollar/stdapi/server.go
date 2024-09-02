@@ -7,18 +7,18 @@ import (
 	"net/http"
 
 	"github.com/ddollar/logger"
-	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 )
 
 type RecoverFunc func(error)
 
 type Server struct {
+	*Router
+
 	Check    HandlerFunc
 	Hostname string
 	Logger   *logger.Logger
 	Recover  RecoverFunc
-	Router   *Router
 	Wrapper  func(h http.Handler) http.Handler
 
 	middleware []Middleware
@@ -72,36 +72,4 @@ func (s *Server) Listen(proto, addr string) error {
 
 func (s *Server) Shutdown(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
-}
-
-func (s *Server) MatcherFunc(fn mux.MatcherFunc) *Router {
-	return s.Router.MatcherFunc(fn)
-}
-
-func (s *Server) Route(method, path string, fn HandlerFunc) Route {
-	return s.Router.Route(method, path, fn)
-}
-
-func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s.Router.ServeHTTP(w, r)
-}
-
-func (s *Server) Subrouter(prefix string, fn func(*Router)) *Router {
-	r := &Router{
-		Parent: s.Router,
-		Router: s.Router.PathPrefix(prefix).Subrouter(),
-		Server: s,
-	}
-
-	fn(r)
-
-	return r
-}
-
-func (s *Server) Use(mw Middleware) {
-	s.Router.Use(mw)
-}
-
-func (s *Server) UseHandlerFunc(fn http.HandlerFunc) {
-	s.Router.UseHandlerFunc(fn)
 }
