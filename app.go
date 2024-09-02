@@ -33,6 +33,7 @@ type Options struct {
 	Name         string
 	Prefix       string
 	Resolver     ResolverFunc
+	Router       RouterFunc
 	Web          fs.FS
 	WriteTimeout time.Duration
 }

@@ -27,14 +27,14 @@ func (a *App) cliApi(ctx stdcli.Context) error {
 		return a.watchAndReload(parseExtensions(ctx.Flags().String("watch")), "api", "--port", fmt.Sprint(ctx.Flags().Int("port")))
 	}
 
-	g, err := a.graphQL()
+	api, err := a.api()
 	if err != nil {
 		return errors.Wrap(err)
 	}
 
 	port := coalesce.Any(ctx.Flags().Int("port"), 8000)
 
-	if err := g.server.Listen("https", fmt.Sprintf(":%d", port)); err != nil {
+	if err := api.server.Listen("https", fmt.Sprintf(":%d", port)); err != nil {
 		return errors.Wrap(err)
 	}
 
