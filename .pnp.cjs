@@ -45,7 +45,7 @@ const RAW_RUNTIME_STATE =
           ["subscriptions-transport-ws", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:0.11.0"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["uuid", "npm:8.3.2"],\
-          ["vite", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:5.4.8"],\
+          ["vite", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:5.4.14"],\
           ["vue", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:3.4.19"],\
           ["vue-router", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:4.2.5"],\
           ["vue-select", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:4.0.0-beta.6"],\
@@ -2311,7 +2311,7 @@ const RAW_RUNTIME_STATE =
           ["subscriptions-transport-ws", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:0.11.0"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
           ["uuid", "npm:8.3.2"],\
-          ["vite", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:5.4.8"],\
+          ["vite", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:5.4.14"],\
           ["vue", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:3.4.19"],\
           ["vue-router", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:4.2.5"],\
           ["vue-select", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:4.0.0-beta.6"],\
@@ -2526,17 +2526,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["vite", [\
-      ["npm:5.4.8", {\
-        "packageLocation": "../../.yarn/berry/cache/vite-npm-5.4.8-0e6d2e051d-10c0.zip/node_modules/vite/",\
+      ["npm:5.4.14", {\
+        "packageLocation": "../../.yarn/berry/cache/vite-npm-5.4.14-4903607bfe-10c0.zip/node_modules/vite/",\
         "packageDependencies": [\
-          ["vite", "npm:5.4.8"]\
+          ["vite", "npm:5.4.14"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:5.4.8", {\
-        "packageLocation": "./.yarn/__virtual__/vite-virtual-0f779476bc/3/.yarn/berry/cache/vite-npm-5.4.8-0e6d2e051d-10c0.zip/node_modules/vite/",\
+      ["virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:5.4.14", {\
+        "packageLocation": "./.yarn/__virtual__/vite-virtual-6d8cc05f8c/3/.yarn/berry/cache/vite-npm-5.4.14-4903607bfe-10c0.zip/node_modules/vite/",\
         "packageDependencies": [\
-          ["vite", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:5.4.8"],\
+          ["vite", "virtual:e9a552501fb4212bdb3a1f4c6b9505fab2b31fc860eb1e9e2123e60a343006611b0b730d17e9b9a74e770278a5b4271e2855e53e7a4a531381f26eb1a46ec14e#npm:5.4.14"],\
           ["@types/less", null],\
           ["@types/lightningcss", null],\
           ["@types/node", "npm:18.19.17"],\
