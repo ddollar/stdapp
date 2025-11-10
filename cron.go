@@ -7,8 +7,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/ddollar/errors"
-	"github.com/ddollar/stdcli"
+	"go.ddollar.dev/errors"
+	"go.ddollar.dev/stdcli"
 	"github.com/docker/docker/api/types"
 	docker "github.com/docker/docker/client"
 	"github.com/kballard/go-shellquote"

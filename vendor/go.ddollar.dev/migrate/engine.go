@@ -6,7 +6,7 @@ import (
 	"io/fs"
 	"sort"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 )
 
 type Engine struct {

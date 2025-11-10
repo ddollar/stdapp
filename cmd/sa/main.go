@@ -6,9 +6,9 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/ddollar/coalesce"
-	"github.com/ddollar/errors"
-	"github.com/ddollar/stdapp"
+	"go.ddollar.dev/coalesce"
+	"go.ddollar.dev/errors"
+	"go.ddollar.dev/stdapp"
 )
 
 type compose struct {

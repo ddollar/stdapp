@@ -7,7 +7,7 @@ import (
 	"io/fs"
 	"net/url"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 )
 
 type Options struct {

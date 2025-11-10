@@ -14,11 +14,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ddollar/coalesce"
-	"github.com/ddollar/errors"
-	"github.com/ddollar/migrate"
-	"github.com/ddollar/stdapi"
-	"github.com/ddollar/stdcli"
+	"go.ddollar.dev/coalesce"
+	"go.ddollar.dev/errors"
+	"go.ddollar.dev/migrate"
+	"go.ddollar.dev/stdapi"
+	"go.ddollar.dev/stdcli"
 	"golang.org/x/sync/errgroup"
 )
 

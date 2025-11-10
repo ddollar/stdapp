@@ -1,5 +1,5 @@
 package stdapp
 
-import "github.com/ddollar/stdapi"
+import "go.ddollar.dev/stdapi"
 
 type RouterFunc func(*stdapi.Router) error

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ddollar/graphql-transport-ws/graphqlws"
+	"go.ddollar.dev/graphql-transport-ws/graphqlws"
 	"github.com/graph-gophers/graphql-go"
 	"github.com/graph-gophers/graphql-go/relay"
 	"github.com/pkg/errors"

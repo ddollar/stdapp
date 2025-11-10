@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/ddollar/logger"
+	"go.ddollar.dev/logger"
 	"github.com/pkg/errors"
 )
 

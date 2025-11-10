@@ -9,7 +9,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
-	"github.com/ddollar/graphql-transport-ws/graphqlws/internal/connection"
+	"go.ddollar.dev/graphql-transport-ws/graphqlws/internal/connection"
 )
 
 // ProtocolGraphQLWS is websocket subprotocol ID for GraphQL over WebSocket

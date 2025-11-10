@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"example.org/stdapp/api/resolver"
-	"github.com/ddollar/errors" //go:embed db/migrate/*.sql
-	"github.com/ddollar/stdapp"
+	"go.ddollar.dev/errors" //go:embed db/migrate/*.sql
+	"go.ddollar.dev/stdapp"
 )
 
 var migrations embed.FS

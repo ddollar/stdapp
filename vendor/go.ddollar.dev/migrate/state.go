@@ -1,6 +1,6 @@
 package migrate
 
-import "github.com/ddollar/errors"
+import "go.ddollar.dev/errors"
 
 type State map[string]bool
 

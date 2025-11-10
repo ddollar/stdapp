@@ -1,17 +1,9 @@
-module github.com/ddollar/stdapp
+module go.ddollar.dev/stdapp
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/cespare/reflex v0.3.1
-	github.com/ddollar/coalesce v1.1.0
-	github.com/ddollar/errors v1.0.1
-	github.com/ddollar/graphql-transport-ws v0.0.2-ddollar2
-	github.com/ddollar/logger v0.0.0-20180522214415-e39179955b52
-	github.com/ddollar/migrate v1.7.1
-	github.com/ddollar/stdapi v1.1.2
-	github.com/ddollar/stdcli v1.4.1
-	github.com/ddollar/stdgraph v1.5.0
 	github.com/docker/docker v25.0.6+incompatible
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/golangci/golangci-lint v1.55.2
@@ -20,6 +12,14 @@ require (
 	github.com/uptrace/bun v1.1.16
 	github.com/uptrace/bun/dialect/pgdialect v1.1.16
 	github.com/uptrace/bun/driver/pgdriver v1.1.16
+	go.ddollar.dev/coalesce v1.1.0
+	go.ddollar.dev/errors v1.0.1
+	go.ddollar.dev/graphql-transport-ws v0.0.2-ddollar2
+	go.ddollar.dev/logger v0.0.0-20180522214415-e39179955b52
+	go.ddollar.dev/migrate v1.7.1
+	go.ddollar.dev/stdapi v1.1.2
+	go.ddollar.dev/stdcli v1.4.1
+	go.ddollar.dev/stdgraph v1.5.0
 	golang.org/x/sync v0.10.0
 )
 
@@ -62,6 +62,7 @@ require (
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
 	github.com/daixiang0/gci v0.12.1 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
+	github.com/ddollar/logger v1.2.0 // indirect
 	github.com/denis-tingaikin/go-header v0.4.3 // indirect
 	github.com/distribution/reference v0.5.0 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
@@ -242,4 +243,4 @@ require (
 	mvdan.cc/unparam v0.0.0-20240104100049-c549a3470d14 // indirect
 )
 
-// replace github.com/ddollar/migrate => ../migrate
+// replace go.ddollar.dev/migrate => ../migrate
