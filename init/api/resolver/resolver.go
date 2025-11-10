@@ -4,7 +4,7 @@ import (
 	_ "embed"
 
 	"example.org/stdapp/api/models"
-	"github.com/ddollar/stdapp"
+	"go.ddollar.dev/stdapp"
 	"github.com/go-pg/pg/v10/orm"
 )
 

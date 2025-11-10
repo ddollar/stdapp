@@ -3,7 +3,7 @@ package stdapp
 import (
 	"strings"
 
-	"github.com/ddollar/logger"
+	"go.ddollar.dev/logger"
 )
 
 func New(opts Options) (*App, error) {

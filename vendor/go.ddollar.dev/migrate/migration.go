@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 )
 
 type Migration struct {

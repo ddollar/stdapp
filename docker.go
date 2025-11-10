@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	docker "github.com/docker/docker/client"

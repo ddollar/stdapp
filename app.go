@@ -6,10 +6,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/ddollar/coalesce"
-	"github.com/ddollar/errors"
-	"github.com/ddollar/logger"
-	"github.com/ddollar/stdcli"
+	"go.ddollar.dev/coalesce"
+	"go.ddollar.dev/errors"
+	"go.ddollar.dev/logger"
+	"go.ddollar.dev/stdcli"
 )
 
 var version = "dev"

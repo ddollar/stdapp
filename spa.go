@@ -4,8 +4,8 @@ import (
 	"io/fs"
 	"net/http"
 
-	"github.com/ddollar/errors"
-	"github.com/ddollar/stdapi"
+	"go.ddollar.dev/errors"
+	"go.ddollar.dev/stdapi"
 )
 
 type SPA struct {

@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 	"github.com/fsnotify/fsnotify"
 )
 

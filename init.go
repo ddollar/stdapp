@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 )
 
 //go:generate zip -r init.zip init
@@ -66,7 +66,7 @@ func initApp(name string) error {
 		}
 
 		data = bytes.ReplaceAll(data, []byte("stdapp-init"), []byte(name))
-		data = bytes.ReplaceAll(data, []byte("example.org/stdapp"), []byte(fmt.Sprintf("github.com/ddollar/%s", name)))
+		data = bytes.ReplaceAll(data, []byte("example.org/stdapp"), []byte(fmt.Sprintf("go.ddollar.dev/%s", name)))
 
 		if err := ioutil.WriteFile(target, data, 0644); err != nil {
 			return errors.Wrap(err)
