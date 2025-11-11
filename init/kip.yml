@@ -1,0 +1,23 @@
+resources:
+  postgres:
+    type: postgres
+
+routes:
+  - host: ${DOMAIN:-stdapp-init.localhost}
+    path: /api/graph
+    service: api
+  - host: ${DOMAIN:-stdapp-init.localhost}
+    service: web
+
+services:
+  api:
+    command: app api
+    port: 8000
+    scale:
+      count: 1
+
+  web:
+    command: app web
+    port: 8080
+    scale:
+      count: 1

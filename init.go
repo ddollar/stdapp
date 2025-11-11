@@ -78,10 +78,6 @@ func initApp(name string) error {
 		return errors.Wrap(err)
 	}
 
-	if err := os.Symlink("docker-compose.development.yml", "docker-compose.override.yml"); err != nil {
-		return errors.Wrap(err)
-	}
-
 	if err := exec.Command("make", "vendor").Run(); err != nil {
 		return errors.Wrap(err)
 	}

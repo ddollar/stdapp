@@ -9,9 +9,8 @@ A comprehensive Go framework for building production-ready full-stack applicatio
 - **Database Migrations** - Automatic PostgreSQL migrations with [Bun ORM](https://bun.uptrace.dev)
 - **Vue.js Integration** - Embedded SPA serving with hot reload in development
 - **Development Mode** - File watching with automatic rebuilds
-- **Cron Scheduling** - Docker label-based cron jobs for background tasks
 - **CLI Framework** - Rich command-line interface via [stdcli](https://go.ddollar.dev/stdcli)
-- **Docker Ready** - Complete Docker and docker-compose configuration
+- **Kubernetes Ready** - Complete kip.yml configuration for deployment
 - **Middleware Support** - Extensible HTTP middleware chain
 - **Project Scaffolding** - Initialize new projects with complete structure
 
@@ -47,7 +46,8 @@ myapp/
 ├── web/
 │   ├── src/            # Vue.js application
 │   └── dist/           # Built assets
-├── docker-compose.yml
+├── kip.yml
+├── kip.dev.yml
 ├── Dockerfile
 ├── go.mod
 ├── main.go
@@ -59,7 +59,7 @@ Start development:
 ```bash
 make dev
 # or
-docker-compose up
+kip build --development && kip release
 ```
 
 ## Usage
@@ -198,9 +198,6 @@ myapp migration <name> [--dir=db/migrate]
 # Start the web server (SPA)
 myapp web [--development] [--port=8080]
 
-# Run cron daemon
-myapp cron [--development]
-
 # Run arbitrary commands
 myapp cmd [--development] <command>
 
@@ -227,30 +224,27 @@ Customize watched file extensions:
 myapp api --development --watch=go,graphql,sql
 ```
 
-## Cron Jobs
+## Scheduled Tasks
 
-Schedule background tasks using Docker labels:
+Schedule background tasks using [kip timers](https://github.com/ddollar/kip):
 
 ```yaml
-# docker-compose.yml
-services:
-  api:
-    labels:
-      stdapp.cron.backup: "@daily /app/myapp cmd backup"
-      stdapp.cron.cleanup: "@every 1h /app/myapp cmd cleanup"
-      stdapp.cron.report: "0 9 * * MON /app/myapp cmd weekly-report"
+# kip.yml
+timers:
+  backup:
+    schedule: "0 2 * * *"  # Daily at 2am
+    command: app cmd backup
+
+  cleanup:
+    schedule: "0 * * * *"  # Every hour
+    command: app cmd cleanup
+
+  report:
+    schedule: "0 9 * * 1"  # Mondays at 9am
+    command: app cmd weekly-report
 ```
 
-Start the cron daemon:
-
-```bash
-myapp cron
-```
-
-Supported formats:
-- Standard cron: `0 9 * * *`
-- Descriptors: `@hourly`, `@daily`, `@weekly`, `@monthly`, `@yearly`
-- Intervals: `@every 5m`, `@every 1h30m`, `@every 24h`
+Uses standard cron format: `minute hour day month weekday`
 
 ## Configuration
 
@@ -265,13 +259,12 @@ PORT=8000
 DEVELOPMENT=true
 ```
 
-### Docker Compose
+### Kip Configuration
 
-The generated `docker-compose.yml` includes:
-- Application container with hot reload
-- PostgreSQL database
-- Redis (optional)
-- Development overrides via `docker-compose.override.yml`
+The generated `kip.yml` includes:
+- API and web services
+- PostgreSQL resource with automatic DATABASE_URL injection
+- Development overrides via `kip.dev.yml` with volume mounts and file watching
 
 ### Makefile Targets
 
@@ -458,51 +451,45 @@ func TestAPI(t *testing.T) {
 
 ## Production Deployment
 
-### Build
+### Build and Deploy with Kip
+
+Deploy to Kubernetes using [kip](https://github.com/ddollar/kip):
 
 ```bash
-# Multi-stage Docker build
-docker build -t myapp:latest .
+# Build the Docker image
+kip build
+
+# Deploy to Kubernetes
+kip release
 ```
 
-### Run
-
-```bash
-# API server
-myapp api --port=8000
-
-# Web server
-myapp web --port=8080
-
-# Cron daemon
-myapp cron
-```
-
-### Kubernetes
-
-The Docker images work seamlessly with Kubernetes or [kip](https://github.com/ddollar/kip):
+The generated `kip.yml` provides a production-ready configuration:
 
 ```yaml
 # kip.yml
+resources:
+  postgres:
+    type: postgres
+
+routes:
+  - host: ${DOMAIN:-myapp.localhost}
+    path: /api/graph
+    service: api
+  - host: ${DOMAIN:-myapp.localhost}
+    service: web
+
 services:
   api:
-    command: api
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
+    command: app api
     port: 8000
     scale:
       count: 3
 
-  cron:
-    command: cron
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
+  web:
+    command: app web
+    port: 8080
     scale:
-      count: 1
-
-resources:
-  postgres:
-    type: postgres
+      count: 2
 ```
 
 ## License

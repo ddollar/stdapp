@@ -57,13 +57,6 @@ func (a *App) Run(args []string) int {
 		Validate: stdcli.ArgsMin(1),
 	})
 
-	c.Command("cron", "run cron daemon", a.cliCron, stdcli.CommandOptions{
-		Flags: []stdcli.Flag{
-			flagDevelopment,
-			flagWatch,
-		},
-	})
-
 	c.Command("deployment", "run a command on the deploy target", a.cliDeployment, stdcli.CommandOptions{})
 
 	c.Command("init", "initialize a new project", a.cliInit, stdcli.CommandOptions{

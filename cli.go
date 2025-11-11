@@ -61,23 +61,6 @@ func (a *App) cliCmd(ctx stdcli.Context) error {
 	return nil
 }
 
-func (a *App) cliCron(ctx stdcli.Context) error {
-	if ctx.Flags().Bool("development") {
-		return a.watchAndReload(parseExtensions(ctx.Flags().String("watch")), "cron")
-	}
-
-	cc, err := NewCron(ctx)
-	if err != nil {
-		return errors.Wrap(err)
-	}
-
-	if err := cc.Run(); err != nil {
-		return errors.Wrap(err)
-	}
-
-	return nil
-}
-
 func (a *App) cliDeployment(ctx stdcli.Context) error {
 	data, err := exec.Command("git", "remote", "get-url", "deploy").CombinedOutput()
 	if err != nil {
