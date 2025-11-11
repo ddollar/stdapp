@@ -12,6 +12,36 @@ import (
 	"github.com/pkg/errors"
 )
 
+// UnmarshalOptions automatically populates a struct from request parameters.
+//
+// This function uses reflection to parse query parameters, form data, and headers
+// into a struct based on field tags:
+//
+// Supported tags:
+//   - param: Read from form/POST data
+//   - query: Read from URL query parameters
+//   - header: Read from HTTP headers
+//   - default: Default value if parameter is missing
+//
+// Supported field types:
+//   - *bool, *int, *int64, *string
+//   - *time.Duration, *time.Time
+//   - []string (comma-separated)
+//   - map[string]string (URL query encoded)
+//
+// Example:
+//
+//	type UserOpts struct {
+//		ID     *string `param:"id"`
+//		Email  *string `query:"email"`
+//		APIKey *string `header:"X-API-Key"`
+//		Limit  *int    `query:"limit" default:"10"`
+//	}
+//
+//	var opts UserOpts
+//	if err := stdapi.UnmarshalOptions(r, &opts); err != nil {
+//		return err
+//	}
 func UnmarshalOptions(r *http.Request, opts interface{}) error {
 	v := reflect.ValueOf(opts).Elem()
 	t := v.Type()

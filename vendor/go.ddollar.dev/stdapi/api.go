@@ -1,3 +1,31 @@
+// Package stdapi provides a lightweight, opinionated HTTP API framework for Go.
+//
+// stdapi is built on top of gorilla/mux and provides a cleaner, more ergonomic API
+// for building web applications and HTTP APIs. It wraps standard Go HTTP handlers
+// with a custom Context object and structured error handling.
+//
+// Key features:
+//   - Context-based request/response handling
+//   - Structured error handling with HTTP status codes
+//   - Built-in middleware support
+//   - WebSocket support alongside HTTP endpoints
+//   - Session management with flash messages
+//   - Template rendering with layout support
+//   - Automatic request parameter unmarshaling
+//   - TLS/HTTP2 support with auto-generated certificates
+//   - Request ID generation and structured logging
+//
+// Example usage:
+//
+//	s := stdapi.New("myapp", "localhost")
+//	s.Route("GET", "/users", listUsers)
+//	s.Route("POST", "/users", createUser)
+//	s.Listen("https", ":443")
+//
+//	func listUsers(c *stdapi.Context) error {
+//		users := []User{...}
+//		return c.RenderJSON(users)
+//	}
 package stdapi
 
 import (
@@ -8,6 +36,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// New creates a new Server with the given namespace and hostname.
+//
+// The namespace is used for structured logging to identify the application.
+// The hostname is used for TLS certificate generation when using secure protocols.
+//
+// A default health check endpoint is automatically registered at /check.
 func New(ns, hostname string) *Server {
 	logger := logger.New(fmt.Sprintf("ns=%s", ns))
 

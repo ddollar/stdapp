@@ -151,7 +151,6 @@ github.com/daixiang0/gci/pkg/utils
 github.com/davecgh/go-spew/spew
 # github.com/ddollar/logger v1.2.0
 ## explicit; go 1.24.0
-github.com/ddollar/logger
 # github.com/denis-tingaikin/go-header v0.4.3
 ## explicit; go 1.17
 github.com/denis-tingaikin/go-header
@@ -856,14 +855,14 @@ go.ddollar.dev/errors
 ## explicit; go 1.15
 go.ddollar.dev/graphql-transport-ws/graphqlws
 go.ddollar.dev/graphql-transport-ws/graphqlws/internal/connection
-# go.ddollar.dev/logger v0.0.0-20180522214415-e39179955b52
-## explicit
+# go.ddollar.dev/logger v1.3.0
+## explicit; go 1.24.0
 go.ddollar.dev/logger
 # go.ddollar.dev/migrate v1.7.1
 ## explicit; go 1.22.1
 go.ddollar.dev/migrate
-# go.ddollar.dev/stdapi v1.1.2
-## explicit; go 1.23.0
+# go.ddollar.dev/stdapi v1.3.0
+## explicit; go 1.24.0
 go.ddollar.dev/stdapi
 # go.ddollar.dev/stdapp v1.14.1
 ## explicit; go 1.24.0

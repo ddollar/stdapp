@@ -11,24 +11,53 @@ import (
 	"github.com/pkg/errors"
 )
 
+// HandlerFunc is the signature for HTTP request handlers in stdapi.
+//
+// Unlike standard http.HandlerFunc, stdapi handlers receive a Context object
+// that wraps the request and response, and they return an error instead of
+// writing errors directly to the response.
+//
+// If a handler returns an error that implements the Error interface, the error's
+// Code() will be used as the HTTP status code. Otherwise, a 500 Internal Server
+// Error is returned.
 type HandlerFunc func(c *Context) error
 
+// Middleware wraps a HandlerFunc to add pre- or post-processing logic.
+//
+// Middleware can modify the request/response, log information, check authentication,
+// or short-circuit the handler chain by returning early.
 type Middleware func(fn HandlerFunc) HandlerFunc
 
+// Router handles HTTP routing and middleware management.
+//
+// Router wraps gorilla/mux.Router and provides the stdapi-style handler interface.
+// Routers can be nested using Subrouter, and child routers inherit parent middleware.
 type Router struct {
 	*mux.Router
 
+	// Middleware contains the middleware stack for this router.
 	Middleware []Middleware
-	Parent     *Router
-	Server     *Server
+
+	// Parent is the parent router if this is a subrouter, nil otherwise.
+	Parent *Router
+
+	// Server is the server this router belongs to.
+	Server *Server
 }
 
+// Route represents a registered route and provides access to underlying mux.Route
+// for additional configuration (e.g., host matching, schemes, queries).
 type Route struct {
 	*mux.Route
 
 	Router *Router
 }
 
+// MatcherFunc creates a subrouter that only matches requests satisfying the given matcher function.
+//
+// The matcher function is called for each request and should return true if the request
+// should be handled by this subrouter. This is useful for custom routing logic like
+// header-based routing or complex conditional routing.
 func (rt *Router) MatcherFunc(fn mux.MatcherFunc) *Router {
 	return &Router{
 		Parent: rt,
@@ -37,14 +66,36 @@ func (rt *Router) MatcherFunc(fn mux.MatcherFunc) *Router {
 	}
 }
 
+// HandleNotFound sets a custom handler for requests that don't match any routes.
 func (rt *Router) HandleNotFound(fn HandlerFunc) {
 	rt.Router.NotFoundHandler = rt.http(fn)
 }
 
+// Redirect registers a route that redirects to the target URL with the given status code.
+//
+// Common redirect codes:
+//   - 301 - Permanent redirect
+//   - 302 - Temporary redirect
+//   - 307 - Temporary redirect (preserves method)
+//   - 308 - Permanent redirect (preserves method)
 func (rt *Router) Redirect(method, path string, code int, target string) {
 	rt.Handle(path, Redirect(code, target)).Methods(method)
 }
 
+// Route registers a handler for the given HTTP method and path pattern.
+//
+// Supported methods:
+//   - "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS" - Standard HTTP methods
+//   - "SOCKET" - WebSocket endpoint (automatically handles upgrade handshake)
+//   - "ANY" - Matches any HTTP method
+//
+// Path patterns support gorilla/mux syntax including:
+//   - Static paths: "/users"
+//   - Path variables: "/users/{id}"
+//   - Regular expressions: "/users/{id:[0-9]+}"
+//   - Path prefixes via Subrouter
+//
+// The returned Route can be further configured using mux.Route methods.
 func (rt *Router) Route(method, path string, fn HandlerFunc) Route {
 	switch method {
 	case "SOCKET":
@@ -65,6 +116,13 @@ func (rt *Router) Route(method, path string, fn HandlerFunc) Route {
 	}
 }
 
+// Static serves static files from the given filesystem at the specified path prefix.
+//
+// Example:
+//
+//	s.Static("/assets", http.Dir("./public"))
+//
+// This would serve files from ./public at URLs like /assets/style.css
 func (rt *Router) Static(path string, files FileSystem) Route {
 	prefix := fmt.Sprintf("%s/", path)
 
@@ -74,6 +132,15 @@ func (rt *Router) Static(path string, files FileSystem) Route {
 	}
 }
 
+// Subrouter creates a new router that handles paths with the given prefix.
+//
+// The subrouter inherits all middleware from its parent routers, executing them
+// in order from outermost to innermost.
+//
+// Example:
+//
+//	api := s.Subrouter("/api/v1")
+//	api.Route("GET", "/users", listUsers)  // Handles /api/v1/users
 func (rt *Router) Subrouter(prefix string) *Router {
 	return &Router{
 		Parent: rt,
@@ -82,14 +149,30 @@ func (rt *Router) Subrouter(prefix string) *Router {
 	}
 }
 
+// SubrouterFunc creates a subrouter and immediately calls the given function with it.
+//
+// This is a convenience method for organizing route registration:
+//
+//	s.SubrouterFunc("/api", func(api *Router) {
+//		api.Route("GET", "/users", listUsers)
+//		api.Route("POST", "/users", createUser)
+//	})
 func (rt *Router) SubrouterFunc(prefix string, fn func(*Router)) {
 	fn(rt.Subrouter(prefix))
 }
 
+// Use adds middleware to this router's middleware stack.
+//
+// Middleware is executed in the order it's added, with parent router middleware
+// executing before child router middleware.
 func (rt *Router) Use(mw Middleware) {
 	rt.Middleware = append(rt.Middleware, mw)
 }
 
+// UseHandlerFunc adds standard http.HandlerFunc middleware to this router.
+//
+// This allows using standard Go HTTP middleware with stdapi routers.
+// The HandlerFunc receives the raw http.ResponseWriter and *http.Request.
 func (rt *Router) UseHandlerFunc(fn http.HandlerFunc) {
 	rt.Middleware = append(rt.Middleware, func(gn HandlerFunc) HandlerFunc {
 		return func(c *Context) error {

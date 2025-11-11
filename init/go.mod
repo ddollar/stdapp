@@ -213,9 +213,9 @@ require (
 	go-simpler.org/sloglint v0.4.0 // indirect
 	go.ddollar.dev/coalesce v1.1.0 // indirect
 	go.ddollar.dev/graphql-transport-ws v0.0.2-ddollar2 // indirect
-	go.ddollar.dev/logger v0.0.0-20180522214415-e39179955b52 // indirect
+	go.ddollar.dev/logger v1.3.0 // indirect
 	go.ddollar.dev/migrate v1.7.1 // indirect
-	go.ddollar.dev/stdapi v1.1.2 // indirect
+	go.ddollar.dev/stdapi v1.3.0 // indirect
 	go.ddollar.dev/stdcli v1.4.1 // indirect
 	go.ddollar.dev/stdgraph v1.5.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0 // indirect

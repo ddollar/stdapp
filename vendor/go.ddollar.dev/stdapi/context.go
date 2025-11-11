@@ -19,11 +19,23 @@ import (
 )
 
 var (
+	// SessionExpiration is the session cookie max age in seconds (default: 30 days).
 	SessionExpiration = 86400 * 30
-	SessionName       = ""
-	SessionSecret     = ""
+
+	// SessionName is the name of the session cookie.
+	// Must be set before using session features.
+	SessionName = ""
+
+	// SessionSecret is the secret key used to sign session cookies.
+	// Must be set before using session features.
+	SessionSecret = ""
 )
 
+// Context wraps an HTTP request and response with convenience methods.
+//
+// Context provides a clean API for accessing request data, rendering responses,
+// managing sessions, and logging. It can transparently handle both HTTP and
+// WebSocket connections.
 type Context struct {
 	context  context.Context
 	id       string
@@ -37,8 +49,15 @@ type Context struct {
 	ws       *websocket.Conn
 }
 
+// Flash represents a one-time notification message stored in the session.
+//
+// Flash messages are automatically deleted after being retrieved, making them
+// ideal for displaying success/error messages after redirects.
 type Flash struct {
-	Kind    string
+	// Kind is the type of flash message (e.g., "success", "error", "warning").
+	Kind string
+
+	// Message is the flash message content.
 	Message string
 }
 
@@ -46,6 +65,10 @@ func init() {
 	gob.Register(Flash{})
 }
 
+// NewContext creates a new Context wrapping the given response writer and request.
+//
+// This is typically called internally by the router, but can be used directly
+// for testing or custom request handling.
 func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	s := sessions.NewCookieStore([]byte(SessionSecret))
 	s.Options.MaxAge = SessionExpiration
@@ -62,14 +85,19 @@ func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	}
 }
 
+// Ajax returns true if the request was made via XMLHttpRequest.
+//
+// This checks for the X-Requested-With: XMLHttpRequest header.
 func (c *Context) Ajax() bool {
 	return c.request.Header.Get("X-Requested-With") == "XMLHttpRequest"
 }
 
+// Body returns the request body as a ReadCloser.
 func (c *Context) Body() io.ReadCloser {
 	return c.request.Body
 }
 
+// BodyJSON reads and unmarshals the request body as JSON into v.
 func (c *Context) BodyJSON(v interface{}) error {
 	data, err := ioutil.ReadAll(c.Body())
 	if err != nil {
@@ -87,10 +115,15 @@ func (c *Context) BodyJSON(v interface{}) error {
 //   return nil
 // }
 
+// Context returns the request's context.Context.
 func (c *Context) Context() context.Context {
 	return c.context
 }
 
+// Flash adds a flash message to the session.
+//
+// The kind parameter typically indicates the message type (e.g., "success", "error").
+// Flash messages are automatically deleted when retrieved via Flashes().
 func (c *Context) Flash(kind, message string) error {
 	s, err := c.session.Get(c.request, SessionName)
 	if err != nil {
@@ -102,6 +135,7 @@ func (c *Context) Flash(kind, message string) error {
 	return s.Save(c.request, c.response)
 }
 
+// Flashes retrieves and clears all flash messages from the session.
 func (c *Context) Flashes() ([]Flash, error) {
 	s, err := c.session.Get(c.request, SessionName)
 	if err != nil {
@@ -123,10 +157,14 @@ func (c *Context) Flashes() ([]Flash, error) {
 	return fs, nil
 }
 
+// Form returns the named form value from POST or PUT body parameters.
 func (c *Context) Form(name string) string {
 	return c.request.FormValue(name)
 }
 
+// Get retrieves a value from the context's variable store.
+//
+// Values are stored via Set() and persist for the lifetime of the request.
 func (c *Context) Get(name string) interface{} {
 	v, ok := c.vars[name]
 	if !ok {
@@ -136,26 +174,38 @@ func (c *Context) Get(name string) interface{} {
 	return v
 }
 
+// Header returns the named request header value.
 func (c *Context) Header(name string) string {
 	return c.request.Header.Get(name)
 }
 
+// IP returns the client's IP address.
+//
+// This respects X-Forwarded-For headers when behind a proxy.
 func (c *Context) IP() string {
 	return strings.Split(xff.GetRemoteAddr(c.Request()), ":")[0]
 }
 
+// Logger returns the structured logger for this request.
+//
+// The logger is automatically tagged with the request ID and handler name.
 func (c *Context) Logger() *logger.Logger {
 	return c.logger
 }
 
+// Logf logs a formatted message using the request's logger.
 func (c *Context) Logf(format string, args ...interface{}) {
 	c.logger.Logf(format, args...)
 }
 
+// Name returns the handler function name for this request.
 func (c *Context) Name() string {
 	return c.name
 }
 
+// Protocol returns the request protocol (http or https).
+//
+// This respects the X-Forwarded-Proto header when behind a proxy, defaulting to https.
 func (c *Context) Protocol() string {
 	if h := c.Header("X-Forwarded-Proto"); h != "" {
 		return h
@@ -164,10 +214,16 @@ func (c *Context) Protocol() string {
 	return "https"
 }
 
+// Query returns the named URL query parameter value.
 func (c *Context) Query(name string) string {
 	return c.request.URL.Query().Get(name)
 }
 
+// Read reads data from the request body or WebSocket connection.
+//
+// For HTTP requests, this reads from the request body.
+// For WebSocket connections, this reads the next WebSocket message.
+// Returns io.EOF when the connection is closed or a binary message is received.
 func (c *Context) Read(data []byte) (int, error) {
 	if c.ws == nil {
 		return c.Body().Read(data)
@@ -191,11 +247,13 @@ func (c *Context) Read(data []byte) (int, error) {
 	}
 }
 
+// Redirect sends an HTTP redirect response to the target URL with the given status code.
 func (c *Context) Redirect(code int, target string) error {
 	http.Redirect(c.response, c.request, target, code)
 	return nil
 }
 
+// RenderJSON renders v as indented JSON with Content-Type: application/json.
 func (c *Context) RenderJSON(v interface{}) error {
 	data, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
@@ -215,28 +273,38 @@ func (c *Context) RenderJSON(v interface{}) error {
 	return nil
 }
 
+// RenderOK renders a simple "ok\n" response with status 200.
 func (c *Context) RenderOK() error {
 	fmt.Fprintf(c.response, "ok\n")
 	return nil
 }
 
+// RenderTemplate renders an HTML template with the given parameters.
+//
+// See LoadTemplates for information about template configuration and layout resolution.
 func (c *Context) RenderTemplate(path string, params interface{}) error {
 	return RenderTemplate(c, path, params)
 }
 
+// RenderTemplatePart renders a specific named template block.
 func (c *Context) RenderTemplatePart(path, part string, params interface{}) error {
 	return RenderTemplatePart(c, path, part, params)
 }
 
+// RenderText writes plain text to the response.
 func (c *Context) RenderText(t string) error {
 	_, err := c.response.Write([]byte(t))
 	return errors.WithStack(err)
 }
 
+// Request returns the underlying *http.Request.
 func (c *Context) Request() *http.Request {
 	return c.request
 }
 
+// Required validates that all named form parameters are present and non-empty.
+//
+// Returns an error listing any missing parameters.
 func (c *Context) Required(names ...string) error {
 	missing := []string{}
 
@@ -253,10 +321,15 @@ func (c *Context) Required(names ...string) error {
 	return nil
 }
 
+// Response returns the wrapped response writer.
 func (c *Context) Response() *Response {
 	return c.response
 }
 
+// SessionGet retrieves a string value from the session.
+//
+// Returns an empty string if the key doesn't exist.
+// Requires SessionName and SessionSecret to be configured.
 func (c *Context) SessionGet(name string) (string, error) {
 	if SessionName == "" {
 		return "", fmt.Errorf("no session name set")
@@ -281,6 +354,9 @@ func (c *Context) SessionGet(name string) (string, error) {
 	return vs, nil
 }
 
+// SessionSet stores a string value in the session.
+//
+// Requires SessionName and SessionSecret to be configured.
 func (c *Context) SessionSet(name, value string) error {
 	if SessionName == "" {
 		return fmt.Errorf("no session name set")
@@ -297,18 +373,30 @@ func (c *Context) SessionSet(name, value string) error {
 	return s.Save(c.request, c.response)
 }
 
+// Set stores a value in the context's variable store.
+//
+// Values persist for the lifetime of the request and can be retrieved via Get().
 func (c *Context) Set(name string, value interface{}) {
 	c.vars[name] = value
 }
 
+// Tag appends structured tags to the request logger.
+//
+// Example: c.Tag("user_id=%d", userID)
 func (c *Context) Tag(format string, args ...interface{}) {
 	c.logger = c.logger.Append(format, args...)
 }
 
+// SetVar sets a route variable value.
+//
+// This can be used by middleware to override route variables.
 func (c *Context) SetVar(name, value string) {
 	c.rvars[name] = value
 }
 
+// Value returns the named parameter from form data or headers.
+//
+// This checks form parameters first, then falls back to headers.
 func (c *Context) Value(name string) string {
 	if v := c.Form(name); v != "" {
 		return v
@@ -321,6 +409,9 @@ func (c *Context) Value(name string) string {
 	return ""
 }
 
+// Var returns the named route variable value from the URL path.
+//
+// For a route like "/users/{id}", Var("id") returns the captured value.
 func (c *Context) Var(name string) string {
 	if v, ok := c.rvars[name]; ok {
 		return v
@@ -328,10 +419,15 @@ func (c *Context) Var(name string) string {
 	return mux.Vars(c.request)[name]
 }
 
+// Websocket returns the underlying WebSocket connection, or nil for HTTP requests.
 func (c *Context) Websocket() *websocket.Conn {
 	return c.ws
 }
 
+// Write writes data to the response or WebSocket connection.
+//
+// For HTTP requests, this writes to the response body.
+// For WebSocket connections, this sends a text message.
 func (c *Context) Write(data []byte) (int, error) {
 	if c.ws == nil {
 		return c.response.Write(data)
