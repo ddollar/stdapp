@@ -5,7 +5,7 @@ A comprehensive Go framework for building production-ready full-stack applicatio
 ## Features
 
 - **GraphQL API** - Built-in GraphQL server with WebSocket subscriptions via [stdgraph](https://go.ddollar.dev/stdgraph)
-- **Multi-Domain Architecture** - Support for multi-tenant applications with isolated database schemas
+- **Multi-Domain Architecture** - Separate logical domains of objects with isolated database schemas and GraphQL APIs
 - **Database Migrations** - Automatic PostgreSQL migrations with [Bun ORM](https://bun.uptrace.dev)
 - **Vue.js Integration** - Embedded SPA serving with hot reload in development
 - **Development Mode** - File watching with automatic rebuilds
@@ -165,21 +165,21 @@ opts := stdapp.Options{
 
 ### Multi-Domain Setup
 
-Support multiple tenants with isolated database schemas:
+Separate logical domains of objects in your application with isolated database schemas and GraphQL APIs:
 
 ```go
 opts := stdapp.Options{
     Database: os.Getenv("DATABASE_URL"),
-    Domains:  []string{"tenant1", "tenant2", "shared"},
+    Domains:  []string{"public", "admin", "reporting"},
     Resolver: resolver.New,
     // ... other options
 }
 ```
 
-Each domain gets its own GraphQL endpoint:
-- `/api/tenant1` → PostgreSQL schema `tenant1`
-- `/api/tenant2` → PostgreSQL schema `tenant2`
-- `/api/shared` → PostgreSQL schema `shared`
+Each domain gets its own GraphQL endpoint and database schema:
+- `/api/public` → PostgreSQL schema `public`
+- `/api/admin` → PostgreSQL schema `admin`
+- `/api/reporting` → PostgreSQL schema `reporting`
 
 ## CLI Commands
 
