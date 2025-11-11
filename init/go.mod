@@ -7,7 +7,7 @@ require (
 	github.com/golangci/golangci-lint v1.55.2
 	github.com/goware/modvendor v0.5.0
 	go.ddollar.dev/errors v1.2.0
-	go.ddollar.dev/stdapp v1.16.0
+	go.ddollar.dev/stdapp v1.16.1
 )
 
 require (
@@ -211,13 +211,14 @@ require (
 	github.com/ykadowak/zerologlint v0.1.5 // indirect
 	gitlab.com/bosi/decorder v0.4.1 // indirect
 	go-simpler.org/sloglint v0.4.0 // indirect
-	go.ddollar.dev/coalesce v1.1.0 // indirect
+	go.ddollar.dev/coalesce v1.3.0 // indirect
+	go.ddollar.dev/ddl v1.2.0 // indirect
 	go.ddollar.dev/graphql-transport-ws v0.0.2-ddollar2 // indirect
 	go.ddollar.dev/logger v1.3.0 // indirect
-	go.ddollar.dev/migrate v1.7.1 // indirect
+	go.ddollar.dev/migrate v1.8.0 // indirect
 	go.ddollar.dev/stdapi v1.3.0 // indirect
-	go.ddollar.dev/stdcli v1.4.1 // indirect
-	go.ddollar.dev/stdgraph v1.5.0 // indirect
+	go.ddollar.dev/stdcli v1.11.0 // indirect
+	go.ddollar.dev/stdgraph v1.6.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0 // indirect
 	go.opentelemetry.io/otel v1.28.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.28.0 // indirect
