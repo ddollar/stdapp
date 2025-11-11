@@ -5,8 +5,9 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"strings"
 
-	"github.com/pkg/errors"
+	"go.ddollar.dev/errors"
 )
 
 var (
@@ -44,7 +45,16 @@ func init() {
 
 func (w *Writer) Error(err error) error {
 	fmt.Fprintf(w.Stderr, w.renderTags("<error>%s</error>\n"), err)
-	return err
+
+	if os.Getenv("DEBUG") == "true" {
+		if serr, ok := err.(errors.ErrorTracer); ok {
+			for _, f := range serr.ErrorTrace() {
+				fmt.Fprintf(w.Stderr, w.renderTags("<info>  %s:%d</info>\n"), f, f)
+			}
+		}
+	}
+
+	return err //nowrap
 }
 
 func (w *Writer) Errorf(format string, args ...any) error {
@@ -66,7 +76,7 @@ func (w *Writer) Sprintf(format string, args ...any) string {
 func (w *Writer) Write(data []byte) (int, error) {
 	n, err := w.Stdout.Write([]byte(w.renderTags(string(data))))
 	if err != nil {
-		return 0, errors.WithStack(err)
+		return 0, errors.Wrap(err)
 	}
 
 	return n, nil
@@ -75,7 +85,7 @@ func (w *Writer) Write(data []byte) (int, error) {
 func (w *Writer) Writef(format string, args ...any) (int, error) {
 	n, err := fmt.Fprintf(w.Stdout, w.renderTags(format), args...)
 	if err != nil {
-		return 0, errors.WithStack(err)
+		return 0, errors.Wrap(err)
 	}
 
 	return n, nil
@@ -116,6 +126,7 @@ func renderError(s string) string {
 var (
 	colorStripper = regexp.MustCompile("\033\\[[^m]+m")
 	tagStripper   = regexp.MustCompile(`^<[^>?]+>(.*)</[^>?]+>$`)
+	tagMatcher    = regexp.MustCompile(`<([^>?]+)>`)
 )
 
 func stripColor(s string) string {
@@ -132,4 +143,32 @@ func stripTag(v any) string {
 	}
 
 	return match[1]
+}
+
+func stripTags(v any) string {
+	s := fmt.Sprintf("%v", v)
+
+	for {
+		m := tagMatcher.FindStringSubmatchIndex(s)
+
+		if len(m) != 4 {
+			break
+		}
+
+		os := m[0]
+		oe := m[1]
+
+		closer := fmt.Sprintf("</%s>", s[m[2]:m[3]])
+		cs := strings.Index(s, closer)
+
+		if cs == -1 {
+			break
+		}
+
+		ce := cs + len(closer)
+
+		s = s[:os] + s[oe:cs] + s[ce:]
+	}
+
+	return s
 }

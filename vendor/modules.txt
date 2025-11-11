@@ -845,10 +845,13 @@ gitlab.com/bosi/decorder
 go-simpler.org/sloglint
 # go.ddollar.dev/coalesce v1.1.0
 ## explicit; go 1.20
+# go.ddollar.dev/coalesce v1.3.0
+## explicit; go 1.20
 go.ddollar.dev/coalesce
-# go.ddollar.dev/errors v1.0.1
-## explicit; go 1.13
-# go.ddollar.dev/errors v1.1.1
+# go.ddollar.dev/ddl v1.2.0
+## explicit; go 1.22.5
+go.ddollar.dev/ddl
+# go.ddollar.dev/errors v1.2.0
 ## explicit; go 1.13
 go.ddollar.dev/errors
 # go.ddollar.dev/graphql-transport-ws v0.0.2-ddollar2
@@ -860,16 +863,22 @@ go.ddollar.dev/graphql-transport-ws/graphqlws/internal/connection
 go.ddollar.dev/logger
 # go.ddollar.dev/migrate v1.7.1
 ## explicit; go 1.22.1
+# go.ddollar.dev/migrate v1.8.0
+## explicit; go 1.22.1
 go.ddollar.dev/migrate
 # go.ddollar.dev/stdapi v1.3.0
 ## explicit; go 1.24.0
 go.ddollar.dev/stdapi
-# go.ddollar.dev/stdapp v1.14.1
+# go.ddollar.dev/stdapp v1.16.0
 ## explicit; go 1.24.0
 # go.ddollar.dev/stdcli v1.4.1
-## explicit; go 1.18
+## explicit; go 1.22.5
+# go.ddollar.dev/stdcli v1.11.0
+## explicit; go 1.22.5
 go.ddollar.dev/stdcli
 # go.ddollar.dev/stdgraph v1.5.0
+## explicit; go 1.20
+# go.ddollar.dev/stdgraph v1.6.0
 ## explicit; go 1.20
 go.ddollar.dev/stdgraph
 # go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0

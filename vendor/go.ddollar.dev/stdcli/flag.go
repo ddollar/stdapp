@@ -7,7 +7,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
+	"go.ddollar.dev/ddl"
+	"go.ddollar.dev/errors"
+)
+
+type FlagType string
+
+const (
+	FlagBool     FlagType = "bool"
+	FlagDuration FlagType = "duration"
+	FlagInt      FlagType = "int"
+	FlagString   FlagType = "string"
 )
 
 type Flag struct {
@@ -17,7 +27,7 @@ type Flag struct {
 	Short       string
 	Value       any
 
-	kind string
+	kind FlagType
 }
 
 type Flags []*Flag
@@ -27,7 +37,7 @@ func BoolFlag(name, short, description string) Flag {
 		Description: description,
 		Name:        name,
 		Short:       short,
-		kind:        "bool",
+		kind:        FlagBool,
 	}
 }
 
@@ -36,7 +46,7 @@ func DurationFlag(name, short, description string) Flag {
 		Description: description,
 		Name:        name,
 		Short:       short,
-		kind:        "duration",
+		kind:        FlagDuration,
 	}
 }
 
@@ -45,7 +55,7 @@ func IntFlag(name, short, description string) Flag {
 		Description: description,
 		Name:        name,
 		Short:       short,
-		kind:        "int",
+		kind:        FlagInt,
 	}
 }
 
@@ -54,27 +64,27 @@ func StringFlag(name, short, description string) Flag {
 		Description: description,
 		Name:        name,
 		Short:       short,
-		kind:        "string",
+		kind:        FlagString,
 	}
 }
 
 func (f *Flag) Set(v string) error {
-	switch f.Type() {
-	case "bool":
+	switch f.Kind() {
+	case FlagBool:
 		f.Value = (v == "true")
-	case "duration":
+	case FlagDuration:
 		d, err := time.ParseDuration(v)
 		if err != nil {
-			return errors.WithStack(err)
+			return errors.Wrap(err)
 		}
 		f.Value = d
-	case "int":
+	case FlagInt:
 		i, err := strconv.Atoi(v)
 		if err != nil {
-			return errors.WithStack(err)
+			return errors.Wrap(err)
 		}
 		f.Value = i
-	case "string":
+	case FlagString:
 		f.Value = v
 	default:
 		return errors.Errorf("unknown flag type: %s", f.Type())
@@ -88,34 +98,29 @@ func (f *Flag) String() string {
 }
 
 func (f *Flag) Type() string {
+	return string(f.kind)
+}
+
+func (f *Flag) Kind() FlagType {
 	return f.kind
 }
 
-func (f *Flag) Usage(v string) string {
-	switch f.Type() {
-	case "bool":
-		return fmt.Sprintf("%s <u><info></info></u>", v)
-	case "duration", "int", "string":
-		return fmt.Sprintf("%s <u><info>%s</info></u>", v, f.Name)
+func (f *Flag) Usage() string {
+	command := ddl.If(f.Short != "", fmt.Sprintf("-%s", f.Short), "  ")
+	command += fmt.Sprintf(" --%s", f.Name)
+
+	switch f.Kind() {
+	case FlagBool:
+		return command
+	case FlagDuration, FlagInt, FlagString:
+		return fmt.Sprintf("%s <u><info><%s></info></u>", command, f.Name)
 	default:
 		panic(fmt.Sprintf("unknown flag type: %s", f.Type()))
 	}
 }
 
-func (f *Flag) UsageLong() string {
-	return f.Usage(fmt.Sprintf("--%s", f.Name))
-}
-
-func (f *Flag) UsageShort() string {
-	if f.Short == "" {
-		return ""
-	}
-
-	return f.Usage(fmt.Sprintf("-%s", f.Short))
-}
-
 func (fs Flags) Bool(name string) bool {
-	if f, ok := fs.find(name, "bool"); ok {
+	if f, ok := fs.find(name, FlagBool); ok {
 		switch t := f.Value.(type) {
 		case nil:
 			v, _ := f.Default.(bool)
@@ -129,7 +134,7 @@ func (fs Flags) Bool(name string) bool {
 }
 
 func (fs Flags) Int(name string) int {
-	if f, ok := fs.find(name, "int"); ok {
+	if f, ok := fs.find(name, FlagInt); ok {
 		switch t := f.Value.(type) {
 		case nil:
 			v, _ := f.Default.(int)
@@ -143,7 +148,7 @@ func (fs Flags) Int(name string) int {
 }
 
 func (fs Flags) String(name string) string {
-	if f, ok := fs.find(name, "string"); ok {
+	if f, ok := fs.find(name, FlagString); ok {
 		switch t := f.Value.(type) {
 		case nil:
 			v, _ := f.Default.(string)
@@ -166,9 +171,9 @@ func (fs Flags) Value(name string) any {
 	return nil
 }
 
-func (fs Flags) find(name, kind string) (*Flag, bool) {
+func (fs Flags) find(name string, kind FlagType) (*Flag, bool) {
 	for _, f := range fs {
-		if f.Name == name && f.Type() == kind {
+		if f.Name == name && f.Kind() == kind {
 			return f, true
 		}
 	}
@@ -202,16 +207,16 @@ func OptionFlags(opts any) []Flag {
 	return flags
 }
 
-func typeString(v reflect.Type) string {
+func typeString(v reflect.Type) FlagType {
 	switch v.String() {
 	case "bool":
-		return "bool"
+		return FlagBool
 	case "int":
-		return "int"
+		return FlagInt
 	case "string":
-		return "string"
+		return FlagString
 	case "time.Duration":
-		return "duration"
+		return FlagDuration
 	default:
 		panic(fmt.Sprintf("unknown flag type: %s", v))
 	}

@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pkg/errors"
+	"go.ddollar.dev/errors"
 	"github.com/spf13/pflag"
 )
 
@@ -31,20 +31,36 @@ type CommandOptions struct {
 
 type HandlerFunc func(Context) error
 
-func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
-	fs := pflag.NewFlagSet("", pflag.ContinueOnError)
-	fs.Usage = func() { helpCommand(c.engine, c) }
-
-	flags := []*Flag{}
-
-	for _, f := range c.Flags {
+func registerFlags(fs *pflag.FlagSet, flags *[]*Flag, flagDefs []Flag) {
+	for _, f := range flagDefs {
 		g := f
-		flags = append(flags, &g)
+		*flags = append(*flags, &g)
 		flag := fs.VarPF(&g, f.Name, f.Short, f.Description)
-		if f.Type() == "bool" {
+		if f.Kind() == FlagBool {
 			flag.NoOptDefVal = "true"
 		}
 	}
+}
+
+func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
+	fs := pflag.NewFlagSet("", pflag.ContinueOnError)
+
+	flags := []*Flag{}
+
+	// Add global flags first, then command-specific flags
+	registerFlags(fs, &flags, c.engine.Flags)
+	registerFlags(fs, &flags, c.Flags)
+
+	// Create context before parsing so Usage function can use it
+	cc := &defaultContext{
+		Context: ctx,
+		args:    []string{}, // will be updated after parsing
+		flags:   flags,
+		engine:  c.engine,
+	}
+
+	// Set custom usage function before parsing so --help uses our format
+	fs.Usage = func() { helpCommand(cc, c.engine, c) }
 
 	if err := fs.Parse(args); err != nil {
 		if strings.HasPrefix(err.Error(), "unknown shorthand flag") {
@@ -54,24 +70,20 @@ func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 		if err == pflag.ErrHelp {
 			return nil
 		}
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
-	cc := &defaultContext{
-		Context: ctx,
-		args:    fs.Args(),
-		flags:   flags,
-		engine:  c.engine,
-	}
+	// Update context with parsed args
+	cc.args = fs.Args()
 
 	if c.Validate != nil {
 		if err := c.Validate(cc); err != nil {
-			return err
+			return err //nowrap
 		}
 	}
 
 	if err := c.Handler(cc); err != nil {
-		return err
+		return err //nowrap
 	}
 
 	return nil

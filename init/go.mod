@@ -6,8 +6,8 @@ require (
 	github.com/go-pg/pg/v10 v10.11.1
 	github.com/golangci/golangci-lint v1.55.2
 	github.com/goware/modvendor v0.5.0
-	go.ddollar.dev/errors v1.1.1
-	go.ddollar.dev/stdapp v1.14.1
+	go.ddollar.dev/errors v1.2.0
+	go.ddollar.dev/stdapp v1.16.0
 )
 
 require (

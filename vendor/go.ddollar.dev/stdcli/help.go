@@ -1,9 +1,31 @@
 package stdcli
 
 import (
-	"fmt"
 	"sort"
 )
+
+func writeFlags(ctx Context, e *Engine, title string, flags []Flag) {
+	if len(flags) == 0 {
+		return
+	}
+
+	e.Writer.Writef("<h2>%s</h2>\n", title) //nolint:errcheck
+
+	// Sort flags alphabetically by name
+	sorted := make([]Flag, len(flags))
+	copy(sorted, flags)
+	sort.Slice(sorted, func(i, j int) bool { return sorted[i].Name < sorted[j].Name })
+
+	cw := ctx.Columns()
+
+	for _, f := range sorted {
+		cw.Append("", f.Usage(), f.Description)
+	}
+
+	cw.Print()
+
+	e.Writer.Writef("\n") //nolint:errcheck
+}
 
 func help(e *Engine) HandlerFunc {
 	return func(ctx Context) error {
@@ -30,39 +52,17 @@ func help(e *Engine) HandlerFunc {
 		}
 
 		for _, cmd := range cs {
-			e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("<h1>%%-%ds</h1>  <value>%%s</value>\n", l), cmd.FullCommand(), cmd.Description)) // nolint:errcheck
+			e.Writer.Writef("<h1>%-*s</h1>  <value>%s</value>\n", l, cmd.FullCommand(), cmd.Description) // nolint:errcheck
 		}
 
 		return nil
 	}
 }
 
-func helpCommand(e *Engine, cmd *Command) {
+func helpCommand(ctx Context, e *Engine, cmd *Command) {
 	e.Writer.Writef("<h2>USAGE</h2>\n  <value>%s</value> <info>%s</info>\n\n", cmd.FullCommand(), cmd.Usage) //nolint:errcheck
 	e.Writer.Writef("<h2>DESCRIPTION</h2>\n  <value>%s</value>\n\n", cmd.Description)                        //nolint:errcheck
-	e.Writer.Writef("<h2>OPTIONS</h2>\n")                                                                    //nolint:errcheck
 
-	ll := 0
-	ls := 0
-
-	fs := []Flag(cmd.Flags)
-
-	sort.Slice(fs, func(i, j int) bool { return fs[i].Name < fs[j].Name })
-
-	for _, f := range fs {
-		l := f.UsageLong()
-		s := f.UsageShort()
-
-		if len(l) > ll {
-			ll = len(l)
-		}
-
-		if len(s) > ls {
-			ls = len(s)
-		}
-	}
-
-	for _, f := range fs {
-		e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("  %%-%ds  %%-%ds\n", ll, ls), f.UsageLong(), f.UsageShort())) //nolint:errcheck
-	}
+	writeFlags(ctx, e, "OPTIONS", cmd.Flags)
+	writeFlags(ctx, e, "GLOBAL OPTIONS", e.Flags)
 }

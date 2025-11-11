@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/pkg/errors"
+	"go.ddollar.dev/errors"
 )
 
 type Executor interface {
@@ -20,7 +20,7 @@ type defaultExecutor struct{}
 func (e *defaultExecutor) Execute(ctx context.Context, cmd string, args ...string) ([]byte, error) {
 	data, err := exec.CommandContext(ctx, cmd, args...).CombinedOutput()
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, errors.Wrap(err)
 	}
 
 	return data, nil
@@ -33,7 +33,7 @@ func (e *defaultExecutor) Run(ctx context.Context, w io.Writer, cmd string, args
 	c.Stderr = w
 
 	if err := c.Run(); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	return nil
@@ -47,7 +47,7 @@ func (e *defaultExecutor) Terminal(ctx context.Context, cmd string, args ...stri
 	c.Stderr = os.Stderr
 
 	if err := c.Run(); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	return nil

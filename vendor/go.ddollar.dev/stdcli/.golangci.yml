@@ -21,7 +21,6 @@ linters-settings:
     forbid:
       - '^fmt\.Print.*$'
       - '^fmt\.Errorf.*$'
-      - "^os.Getenv.*$"
   gomodguard:
     blocked:
       local_replace_directives: true
@@ -38,4 +37,3 @@ linters-settings:
       - errors.WithStack(
       - (*github.com/ddollar/logger.Logger).Success
       - (*github.com/ddollar/logger.Logger).Successf
-

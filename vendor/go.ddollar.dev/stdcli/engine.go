@@ -7,12 +7,13 @@ import (
 	"os/signal"
 	"strings"
 
-	"github.com/pkg/errors"
+	"go.ddollar.dev/errors"
 )
 
 type Engine struct {
 	Commands []Command
 	Executor Executor
+	Flags    []Flag
 	Name     string
 	Reader   *Reader
 	Settings string
@@ -70,7 +71,7 @@ func (e *Engine) ExecuteContext(ctx context.Context, args []string) int {
 	case ExitCoder:
 		return t.ExitCode()
 	default:
-		e.Writer.Errorf("%s", t) // nolint:errcheck
+		e.Writer.Error(err) //nolint:errcheck
 		return 1
 	}
 }
