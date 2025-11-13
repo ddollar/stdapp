@@ -38,6 +38,10 @@ func (a *App) api() (*API, error) {
 }
 
 func (a *API) handleGraphQL(app *App) error {
+	if app.opts.Resolver == nil {
+		return nil
+	}
+
 	gopts := []graphqlws.Option{
 		graphqlws.WithWriteTimeout(coalesce.Any(app.opts.WriteTimeout, 10*time.Second)),
 	}
