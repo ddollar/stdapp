@@ -1,14 +1,18 @@
 package stdapp
 
 import (
+	"context"
 	"fmt"
 	"io/fs"
+	"net/url"
 	"os"
+	"path/filepath"
 	"time"
 
 	"go.ddollar.dev/coalesce"
 	"go.ddollar.dev/errors"
 	"go.ddollar.dev/logger"
+	"go.ddollar.dev/migrate"
 	"go.ddollar.dev/stdcli"
 )
 
@@ -25,6 +29,7 @@ type App struct {
 }
 
 type Options struct {
+	AutoMigrate  bool
 	Compose      bool
 	Database     string
 	Domains      []string
@@ -135,6 +140,38 @@ func (a *App) runEnv(container string, env map[string]string, command string, ar
 
 	if err := cmd.Run(); err != nil {
 		return errors.Wrap(err)
+	}
+
+	return nil
+}
+
+func (a *App) autoMigrate() error {
+	if a.opts.Migrations == nil {
+		return nil
+	}
+
+	u, err := url.Parse(a.opts.Database)
+	if err != nil {
+		return errors.Wrap(err)
+	}
+
+	mopts := migrate.Options{
+		DryRun: false,
+	}
+
+	for _, domain := range append([]string{""}, a.domains()...) {
+		q := u.Query()
+		q.Set("search_path", domain)
+		u.RawQuery = q.Encode()
+
+		mfs, err := fs.Sub(a.opts.Migrations, filepath.Join("db", "migrate", domain))
+		if err != nil {
+			return errors.Wrap(err)
+		}
+
+		if err := migrate.Run(context.Background(), u.String(), mfs, mopts); err != nil {
+			return errors.Wrap(err)
+		}
 	}
 
 	return nil

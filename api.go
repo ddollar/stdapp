@@ -21,6 +21,12 @@ type API struct {
 }
 
 func (a *App) api() (*API, error) {
+	if a.opts.AutoMigrate {
+		if err := a.autoMigrate(); err != nil {
+			return nil, errors.Wrap(err)
+		}
+	}
+
 	api := &API{
 		app:    a,
 		server: stdapi.New("api", a.opts.Name),
